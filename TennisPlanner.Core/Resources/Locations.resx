@@ -1,0 +1,246 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="TENNIS Alain Mimoun" xml:space="preserve">
+    <value>15 rue de la Nouvelle Calédonie 75012</value>
+  </data>
+  <data name="TENNIS Amandiers" xml:space="preserve">
+    <value>8 rue Louis Delgrès</value>
+  </data>
+  <data name="TENNIS Atlantique" xml:space="preserve">
+    <value>25 allée du Capitaine Dronne - Dalle Montparnasse porche ouest 75015</value>
+  </data>
+  <data name="TENNIS Aurelle de Paladines" xml:space="preserve">
+    <value>10, rue Parmentier 92200</value>
+  </data>
+  <data name="TENNIS Bertrand Dauvin" xml:space="preserve">
+    <value>12 rue René Binet 75018</value>
+  </data>
+  <data name="TENNIS Bobigny" xml:space="preserve">
+    <value>40 - 102, avenue de la Division Leclerc 93000</value>
+  </data>
+  <data name="TENNIS Candie" xml:space="preserve">
+    <value>11 rue Candie 75011</value>
+  </data>
+  <data name="TENNIS Carnot" xml:space="preserve">
+    <value>26 boulevard Carnot 75012</value>
+  </data>
+  <data name="TENNIS Château des Rentiers" xml:space="preserve">
+    <value>184 rue du Château des Rentiers 75013</value>
+  </data>
+  <data name="TENNIS Cordelières" xml:space="preserve">
+    <value>35 rue des Cordelières 75013</value>
+  </data>
+  <data name="TENNIS Courcelles" xml:space="preserve">
+    <value>211, rue de Courcelles 75017</value>
+  </data>
+  <data name="TENNIS Croix Nivert" xml:space="preserve">
+    <value>107 rue de la Croix Nivert 75015</value>
+  </data>
+  <data name="TENNIS Docteurs Déjerine" xml:space="preserve">
+    <value>32-36 rue des Docteurs Augusta et Jules Déjerine 75020</value>
+  </data>
+  <data name="TENNIS Dunois" xml:space="preserve">
+    <value>70 rue Dunois 75013</value>
+  </data>
+  <data name="TENNIS Edouard Pailleron" xml:space="preserve">
+    <value>24 rue Edouard Pailleron 75019</value>
+  </data>
+  <data name="TENNIS Elisabeth" xml:space="preserve">
+    <value>7 avenue Paul Appell 75014</value>
+  </data>
+  <data name="TENNIS Georges Carpentier" xml:space="preserve">
+    <value>5 Place de Port au Prince 75013</value>
+  </data>
+  <data name="TENNIS Henry de Montherlant" xml:space="preserve">
+    <value>30-32 Boulevard Lannes 75016</value>
+  </data>
+  <data name="TENNIS Jandelle" xml:space="preserve">
+    <value>15-17 cité Jandelle 75019</value>
+  </data>
+  <data name="TENNIS Jesse Owens" xml:space="preserve">
+    <value>172 rue Championnet 75018</value>
+  </data>
+  <data name="TENNIS Jules Ladoumègue" xml:space="preserve">
+    <value>39 rue des Petits Ponts 75019</value>
+  </data>
+  <data name="TENNIS La Faluère" xml:space="preserve">
+    <value>route de la Pyramide 75012</value>
+  </data>
+  <data name="TENNIS Louis Lumière" xml:space="preserve">
+    <value>30 rue Louis Lumière 75020</value>
+  </data>
+  <data name="TENNIS Léo Lagrange" xml:space="preserve">
+    <value>68, boulevard Poniatowski 75012</value>
+  </data>
+  <data name="TENNIS Max Rousié" xml:space="preserve">
+    <value>28, rue André Bréchet 75017</value>
+  </data>
+  <data name="TENNIS Moureu - Baudricourt" xml:space="preserve">
+    <value>17 avenue Edison 75013</value>
+  </data>
+  <data name="TENNIS NEUVE SAINT PIERRE" xml:space="preserve">
+    <value>5 - 7 rue Neuve-Saint-Pierre 75004</value>
+  </data>
+  <data name="TENNIS Niox" xml:space="preserve">
+    <value>12 quai Saint-Exupéry 75016</value>
+  </data>
+  <data name="TENNIS Paul Barruel" xml:space="preserve">
+    <value>24 rue Paul Barruel 75015</value>
+  </data>
+  <data name="TENNIS Philippe Auguste" xml:space="preserve">
+    <value>108 avenue Philippe Auguste 75011</value>
+  </data>
+  <data name="TENNIS Poissonniers" xml:space="preserve">
+    <value>2 rue Jean Cocteau 75018</value>
+  </data>
+  <data name="TENNIS Poliveau" xml:space="preserve">
+    <value>39BIS RUE DE POLIVEAU 75005</value>
+  </data>
+  <data name="TENNIS Porte de Bagnolet" xml:space="preserve">
+    <value>72 rue Louis Lumière 75020</value>
+  </data>
+  <data name="TENNIS Poterne des Peupliers" xml:space="preserve">
+    <value>17 rue Max Jacob 75013</value>
+  </data>
+  <data name="TENNIS Reims - Asnières" xml:space="preserve">
+    <value>34, boulevard de Reims 75017</value>
+  </data>
+  <data name="TENNIS René et André Mourlon" xml:space="preserve">
+    <value>19 rue Gaston de Caillavet 75015</value>
+  </data>
+  <data name="TENNIS Rigoulot - La Plaine" xml:space="preserve">
+    <value>18 avenue de la Porte de Brancion 75015</value>
+  </data>
+  <data name="TENNIS Sablonnière" xml:space="preserve">
+    <value>62 rue Cambronne 75015</value>
+  </data>
+  <data name="TENNIS Sept arpents" xml:space="preserve">
+    <value>9 rue des Sept Arpents 75019</value>
+  </data>
+  <data name="TENNIS Suzanne Lenglen" xml:space="preserve">
+    <value>2 rue Louis Armand 75015</value>
+  </data>
+  <data name="TENNIS Thiéré" xml:space="preserve">
+    <value>9t-11 passage Thiéré 75011</value>
+  </data>
+  <data name="TENNIS Valeyre" xml:space="preserve">
+    <value>24 rue de Rochechouart 75009</value>
+  </data>
+</root>
