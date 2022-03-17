@@ -7,8 +7,8 @@ namespace TennisPlanner.Core.Clients
 {
     public interface ITennisClient
     {
-        public Task<List<TennisCourt>> GetTennisCourtsListAsync();
+        public Task<IEnumerable<TennisFacility>> GetTennisCourtsListAsync();
 
-        public Task<List<TimeSlot>> GetTimeSlotListAsync(TennisCourt tennisCourt, DateTime day);
+        public Task<IEnumerable<TimeSlot>> GetTimeSlotListAsync(TennisFacility tennisCourt, DateTime day);
     }
 }

@@ -2,9 +2,19 @@
 {
     public class TennisCourt
     {
-        public string Name;
-        public string Url;
-        public string Adress;
-        public int CourtsCount;
+        public TennisCourt(TennisFacility facility, string title, object roof, object ground, object light)
+        {
+            Facility = facility;
+            Title = title;
+            Roof = roof;
+            Ground = ground;
+            Light = light;
+        }
+
+        public TennisFacility Facility { get; }
+        public string Title { get; }
+        public object Roof { get; }
+        public object Ground { get; }
+        public object Light { get; }
     }
 }

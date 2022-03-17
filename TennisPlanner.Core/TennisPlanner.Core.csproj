@@ -9,4 +9,19 @@
     <PackageReference Include="HtmlAgilityPack" Version="1.11.34" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Resources\Locations.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Locations.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Locations.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Locations.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>
