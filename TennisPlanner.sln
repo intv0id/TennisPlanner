@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31205.134
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32228.430
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TennisPlanner.Core", "TennisPlanner.Core\TennisPlanner.Core.csproj", "{9AA1842B-0485-496D-B33B-4DAB740321E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TennisPlanner.Core", "TennisPlanner.Core\TennisPlanner.Core.csproj", "{9AA1842B-0485-496D-B33B-4DAB740321E5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TennisPlanner.Server", "TennisPlanner.Server\TennisPlanner.Server.csproj", "{3A558968-41D1-4985-BA23-C633F1DD7459}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{9AA1842B-0485-496D-B33B-4DAB740321E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9AA1842B-0485-496D-B33B-4DAB740321E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9AA1842B-0485-496D-B33B-4DAB740321E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A558968-41D1-4985-BA23-C633F1DD7459}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A558968-41D1-4985-BA23-C633F1DD7459}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A558968-41D1-4985-BA23-C633F1DD7459}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A558968-41D1-4985-BA23-C633F1DD7459}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
