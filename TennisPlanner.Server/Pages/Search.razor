@@ -1,0 +1,76 @@
+﻿@page "/search"
+@inject ITennisClient TennisClient
+@using TennisPlanner.Core.Contracts
+@using TennisPlanner.Core.Clients
+@using TennisPlanner.Server.Models
+
+<h1>Recherche de créneaux</h1>
+
+<EditForm Model="@searchModel" OnValidSubmit="@HandleSearch">
+    <InputDate @bind-Value="searchModel.SelectedDate" />
+    <button class="btn btn-primary" type="submit" disabled="@(!ValidateFields())">Chercher</button>
+</EditForm>
+
+@if (Availabilities != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Heure</th>
+                <th>Lieu</th>
+                <th>Court</th>
+                <th>Sol</th>
+                <th>Couvert</th>
+                <th>Eclairé</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var courtAvailable in Availabilities)
+            {
+            <tr>
+                <td>@courtAvailable.Time</td>
+                <td>@courtAvailable.CourtInfo.Facility.Name</td>
+                <td>@courtAvailable.CourtInfo.Title</td>
+                <td>@courtAvailable.CourtInfo.Ground</td>
+                <td>@courtAvailable.CourtInfo.Roof</td>
+                <td>@courtAvailable.CourtInfo.Light</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    SearchModel searchModel = new();
+    bool IsSearchEnabled;
+    List<TimeSlot>? Availabilities;
+
+    protected override async Task OnInitializedAsync()
+    {
+        searchModel.SelectedDate = DateTime.Today;
+    }
+
+    private async Task HandleSearch()
+    {
+        Availabilities = await fetchAvailabilitiesAsync(searchModel.SelectedDate.Value);
+    }
+
+    private async Task<List<TimeSlot>> fetchAvailabilitiesAsync(DateTime date)
+    {
+        var courts = await TennisClient.GetTennisCourtsListAsync();
+        var availabilities = await Task.WhenAll(
+            courts.Select(court => TennisClient.GetTimeSlotListAsync(court, date)));
+        return availabilities.SelectMany(x => x).ToList();
+    }
+
+    private bool ValidateFields()
+    {
+        var selectedDate = searchModel.SelectedDate;
+        if (selectedDate == null || selectedDate < DateTime.Today || selectedDate > DateTime.Today.AddDays(7))
+        {
+            return false;
+        }
+        return true;
+    }
+}
