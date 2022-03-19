@@ -1,9 +1,10 @@
 ﻿namespace TennisPlanner.Core.Clients
 {
     using System;
+    using TennisPlanner.Core.Contracts.Location;
 
-    interface ITransportClient
+    public interface ITransportClient
     {
-        DateTime GetTransportationTime(DateTime arrivalTime, string adress);
+        DateTime GetTransportationTime(DateTime arrivalTime, GeoCoordinates fromGeoCoordinates, GeoCoordinates toGeoCoordinates);
     }
 }

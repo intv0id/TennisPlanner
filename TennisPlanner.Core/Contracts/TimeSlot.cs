@@ -4,15 +4,16 @@ namespace TennisPlanner.Core.Contracts
 {
     public class TimeSlot
     {
-        public TimeSlot(string time, CourtStatus status, TennisCourt courtInfo)
+        public TimeSlot(TimeRange timeRange, CourtStatus status, TennisCourt courtInfo)
         {
-            Time = time;
+            TimeRange = timeRange;
             Status = status;
             CourtInfo = courtInfo;
         }
 
-        public string Time { get; }
+        public TimeRange TimeRange { get; }
         public CourtStatus Status { get; }
         public TennisCourt CourtInfo { get; }
+        public TravelInfo TravelInfo { get; }
     }
 }

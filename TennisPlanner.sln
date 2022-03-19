@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TennisPlanner.Core", "Tenni
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TennisPlanner.Server", "TennisPlanner.Server\TennisPlanner.Server.csproj", "{3A558968-41D1-4985-BA23-C633F1DD7459}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TennisPlanner.Shared", "TennisPlanner.Shared\TennisPlanner.Shared.csproj", "{0FAA5868-694D-4FF4-9CDE-736A27B5C39E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{3A558968-41D1-4985-BA23-C633F1DD7459}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A558968-41D1-4985-BA23-C633F1DD7459}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A558968-41D1-4985-BA23-C633F1DD7459}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FAA5868-694D-4FF4-9CDE-736A27B5C39E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FAA5868-694D-4FF4-9CDE-736A27B5C39E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FAA5868-694D-4FF4-9CDE-736A27B5C39E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FAA5868-694D-4FF4-9CDE-736A27B5C39E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

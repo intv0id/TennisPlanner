@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TennisPlanner.Core.Contracts;
 using TennisPlanner.Core.Enum;
@@ -16,6 +16,9 @@ namespace TennisPlanner.Core.Clients
             "https://tennis.paris.fr/tennis/jsp/site/Portal.jsp?page=tennisParisien&view=les_tennis_parisiens";
         private const string tennisAvalabilitySearch =
             "https://tennis.paris.fr/tennis/jsp/site/Portal.jsp?page=recherche&action=ajax_load_planning";
+        private const string timeRangeFormat = "^(?<startHour>[0-9]{1,2}h) - (?<endHour>[0-9]{1,2})h$";
+
+        private static readonly Regex timeRangeRegex = new Regex(@timeRangeFormat, RegexOptions.Compiled);
 
         public async Task<IEnumerable<TennisFacility>> GetTennisCourtsListAsync()
         {
@@ -93,7 +96,7 @@ namespace TennisPlanner.Core.Clients
             {
                 availabilities.AddRange(
                     availabilitiesHtml.Select(x => new TimeSlot(
-                        time: x.FirstOrDefault(y => y.Name == "td")?.InnerText, 
+                        timeRange: extractTimeRange(x.FirstOrDefault(y => y.Name == "td")?.InnerText), 
                         status: reservationCellToStatus(x.Where(y => y.Name == "td").ToList()[i+1]),
                         courtInfo: courtsInfo[i])));
             }
@@ -120,6 +123,35 @@ namespace TennisPlanner.Core.Clients
                 light: chacteristics[2]);
         }
 
+        private TimeRange extractTimeRange(string? timeRange)
+        {
+            if (timeRange == null)
+            {
+                throw new ArgumentException("Time range is null");
+            }
+
+            var match = timeRangeRegex.Match(timeRange);
+
+            if (!match.Success)
+            {
+                throw new FormatException("Cannot extract time range: match failed");
+            }
+
+            var startHourMatch = match.Groups.GetValueOrDefault("startHour");
+            var endHourMatch = match.Groups.GetValueOrDefault("endHour");
+
+            if (startHourMatch == null || endHourMatch == null)
+            {
+                throw new FormatException("Cannot extract time range: match is null");
+            }
+
+            var startHour = int.Parse(startHourMatch.Value);
+            var endHour = int.Parse(endHourMatch.Value);
+
+            return new TimeRange(
+                startHour: startHour,
+                endHour: endHour);
+        }
         private CourtStatus reservationCellToStatus(HtmlNode htmlNode)
         {
             var availableSlot = htmlNode.InnerText.Contains("LIBRE");
