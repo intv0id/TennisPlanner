@@ -22,14 +22,14 @@ namespace TennisPlanner.Core.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Locations {
+    public class GeoLocations {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Locations() {
+        internal GeoLocations() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace TennisPlanner.Core.Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("TennisPlanner.Core.Resources.Locations", typeof(Locations).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("TennisPlanner.Core.Resources.GeoLocations", typeof(GeoLocations).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,7 +61,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 15 rue de la Nouvelle Calédonie 75012.
+        ///   Recherche une chaîne localisée semblable à 2,410429;48,838003.
         /// </summary>
         public static string TENNIS_Alain_Mimoun {
             get {
@@ -70,7 +70,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 8 rue Louis Delgrès.
+        ///   Recherche une chaîne localisée semblable à 2,386217;48,865839.
         /// </summary>
         public static string TENNIS_Amandiers {
             get {
@@ -79,7 +79,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 25 allée du Capitaine Dronne - Dalle Montparnasse porche ouest 75015.
+        ///   Recherche une chaîne localisée semblable à 2,319296;48,840803.
         /// </summary>
         public static string TENNIS_Atlantique {
             get {
@@ -88,7 +88,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 10, rue Parmentier 92200.
+        ///   Recherche une chaîne localisée semblable à 2,28114;48,883177.
         /// </summary>
         public static string TENNIS_Aurelle_de_Paladines {
             get {
@@ -97,7 +97,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 12 rue René Binet 75018.
+        ///   Recherche une chaîne localisée semblable à 2,342054;48,899487.
         /// </summary>
         public static string TENNIS_Bertrand_Dauvin {
             get {
@@ -106,7 +106,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 40 - 102, avenue de la Division Leclerc 93000.
+        ///   Recherche une chaîne localisée semblable à 2,418141;48,909202.
         /// </summary>
         public static string TENNIS_Bobigny {
             get {
@@ -115,7 +115,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 11 rue Candie 75011.
+        ///   Recherche une chaîne localisée semblable à 2,380032;48,851382.
         /// </summary>
         public static string TENNIS_Candie {
             get {
@@ -124,7 +124,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 26 boulevard Carnot 75012.
+        ///   Recherche une chaîne localisée semblable à 2,412784;48,84314.
         /// </summary>
         public static string TENNIS_Carnot {
             get {
@@ -133,7 +133,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 184 rue du Château des Rentiers 75013.
+        ///   Recherche une chaîne localisée semblable à 2,361998;48,830494.
         /// </summary>
         public static string TENNIS_Château_des_Rentiers {
             get {
@@ -142,7 +142,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 35 rue des Cordelières 75013.
+        ///   Recherche une chaîne localisée semblable à 2,348605;48,833351.
         /// </summary>
         public static string TENNIS_Cordelières {
             get {
@@ -151,7 +151,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 211, rue de Courcelles 75017.
+        ///   Recherche une chaîne localisée semblable à 2,292427;48,889471.
         /// </summary>
         public static string TENNIS_Courcelles {
             get {
@@ -160,7 +160,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 107 rue de la Croix Nivert 75015.
+        ///   Recherche une chaîne localisée semblable à 2,294626;48,842454.
         /// </summary>
         public static string TENNIS_Croix_Nivert {
             get {
@@ -169,7 +169,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 32-36 rue des Docteurs Augusta et Jules Déjerine 75020.
+        ///   Recherche une chaîne localisée semblable à 2,412285;48,855507.
         /// </summary>
         public static string TENNIS_Docteurs_Déjerine {
             get {
@@ -178,7 +178,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 70 rue Dunois 75013.
+        ///   Recherche une chaîne localisée semblable à 2,366279;48,83317.
         /// </summary>
         public static string TENNIS_Dunois {
             get {
@@ -187,7 +187,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 24 rue Edouard Pailleron 75019.
+        ///   Recherche une chaîne localisée semblable à 2,377022;48,880595.
         /// </summary>
         public static string TENNIS_Edouard_Pailleron {
             get {
@@ -196,7 +196,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 7 avenue Paul Appell 75014.
+        ///   Recherche une chaîne localisée semblable à 2,328651;48,821157.
         /// </summary>
         public static string TENNIS_Elisabeth {
             get {
@@ -205,7 +205,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 5 Place de Port au Prince 75013.
+        ///   Recherche une chaîne localisée semblable à 2,366051;48,818907.
         /// </summary>
         public static string TENNIS_Georges_Carpentier {
             get {
@@ -214,7 +214,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 30-32 Boulevard Lannes 75016.
+        ///   Recherche une chaîne localisée semblable à 2,272121;48,867523.
         /// </summary>
         public static string TENNIS_Henry_de_Montherlant {
             get {
@@ -223,7 +223,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 15-17 cité Jandelle 75019.
+        ///   Recherche une chaîne localisée semblable à 2,379872;48,875154.
         /// </summary>
         public static string TENNIS_Jandelle {
             get {
@@ -232,7 +232,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 172 rue Championnet 75018.
+        ///   Recherche une chaîne localisée semblable à 2,334439;48,89469.
         /// </summary>
         public static string TENNIS_Jesse_Owens {
             get {
@@ -241,7 +241,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 39 rue des Petits Ponts 75019.
+        ///   Recherche une chaîne localisée semblable à 2,397736;48,893203.
         /// </summary>
         public static string TENNIS_Jules_Ladoumègue {
             get {
@@ -250,7 +250,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à route de la Pyramide 75012.
+        ///   Recherche une chaîne localisée semblable à 2,451513;48,829859.
         /// </summary>
         public static string TENNIS_La_Faluère {
             get {
@@ -259,7 +259,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 68, boulevard Poniatowski 75012.
+        ///   Recherche une chaîne localisée semblable à 2,399334;48,832165.
         /// </summary>
         public static string TENNIS_Léo_Lagrange {
             get {
@@ -268,7 +268,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 30 rue Louis Lumière 75020.
+        ///   Recherche une chaîne localisée semblable à 2,411646;48,859198.
         /// </summary>
         public static string TENNIS_Louis_Lumière {
             get {
@@ -277,7 +277,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 28, rue André Bréchet 75017.
+        ///   Recherche une chaîne localisée semblable à 2,325251;48,899125.
         /// </summary>
         public static string TENNIS_Max_Rousié {
             get {
@@ -286,7 +286,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 17 avenue Edison 75013.
+        ///   Recherche une chaîne localisée semblable à 2,364135;48,827801.
         /// </summary>
         public static string TENNIS_Moureu___Baudricourt {
             get {
@@ -295,7 +295,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 5 - 7 rue Neuve-Saint-Pierre 75004.
+        ///   Recherche une chaîne localisée semblable à 2,363531;48,853664.
         /// </summary>
         public static string TENNIS_NEUVE_SAINT_PIERRE {
             get {
@@ -304,7 +304,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 12 quai Saint-Exupéry 75016.
+        ///   Recherche une chaîne localisée semblable à 2,264491;48,837317.
         /// </summary>
         public static string TENNIS_Niox {
             get {
@@ -313,7 +313,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 24 rue Paul Barruel 75015.
+        ///   Recherche une chaîne localisée semblable à 2,305045;48,838732.
         /// </summary>
         public static string TENNIS_Paul_Barruel {
             get {
@@ -322,7 +322,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 108 avenue Philippe Auguste 75011.
+        ///   Recherche une chaîne localisée semblable à 2,390992;48,856693.
         /// </summary>
         public static string TENNIS_Philippe_Auguste {
             get {
@@ -331,7 +331,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 2 rue Jean Cocteau 75018.
+        ///   Recherche une chaîne localisée semblable à 2,351992;48,899686.
         /// </summary>
         public static string TENNIS_Poissonniers {
             get {
@@ -340,7 +340,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 39BIS RUE DE POLIVEAU 75005.
+        ///   Recherche une chaîne localisée semblable à 2,357496;48,839815.
         /// </summary>
         public static string TENNIS_Poliveau {
             get {
@@ -349,7 +349,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 72 rue Louis Lumière 75020.
+        ///   Recherche une chaîne localisée semblable à 2,411131;48,862341.
         /// </summary>
         public static string TENNIS_Porte_de_Bagnolet {
             get {
@@ -358,7 +358,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 17 rue Max Jacob 75013.
+        ///   Recherche une chaîne localisée semblable à 2,353835;48,820265.
         /// </summary>
         public static string TENNIS_Poterne_des_Peupliers {
             get {
@@ -367,7 +367,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 34, boulevard de Reims 75017.
+        ///   Recherche une chaîne localisée semblable à 2,296156;48,888725.
         /// </summary>
         public static string TENNIS_Reims___Asnières {
             get {
@@ -376,7 +376,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 19 rue Gaston de Caillavet 75015.
+        ///   Recherche une chaîne localisée semblable à 2,284871;48,848888.
         /// </summary>
         public static string TENNIS_René_et_André_Mourlon {
             get {
@@ -385,7 +385,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 18 avenue de la Porte de Brancion 75015.
+        ///   Recherche une chaîne localisée semblable à 2,300417;48,826634.
         /// </summary>
         public static string TENNIS_Rigoulot___La_Plaine {
             get {
@@ -394,7 +394,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 62 rue Cambronne 75015.
+        ///   Recherche une chaîne localisée semblable à 2,30205;48,843953.
         /// </summary>
         public static string TENNIS_Sablonnière {
             get {
@@ -403,7 +403,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 9 rue des Sept Arpents 75019.
+        ///   Recherche une chaîne localisée semblable à 2,398788;48,889602.
         /// </summary>
         public static string TENNIS_Sept_arpents {
             get {
@@ -412,7 +412,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 2 rue Louis Armand 75015.
+        ///   Recherche une chaîne localisée semblable à 2,276576;48,833071.
         /// </summary>
         public static string TENNIS_Suzanne_Lenglen {
             get {
@@ -421,7 +421,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 9t-11 passage Thiéré 75011.
+        ///   Recherche une chaîne localisée semblable à 2,373838;48,853895.
         /// </summary>
         public static string TENNIS_Thiéré {
             get {
@@ -430,7 +430,7 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 24 rue de Rochechouart 75009.
+        ///   Recherche une chaîne localisée semblable à 2,345022;48,877967.
         /// </summary>
         public static string TENNIS_Valeyre {
             get {

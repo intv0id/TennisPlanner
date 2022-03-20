@@ -14,14 +14,13 @@ namespace TennisPlanner.Core.Clients
 
         private readonly HttpClient _httpClient;
 
-        public GeoClient(HttpClient? httpClient = null)
+        public GeoClient()
         {
-            _httpClient = httpClient ?? new HttpClient();
+            _httpClient = new HttpClient();
         }
 
         public async Task<IEnumerable<Address>> GetAddressAutocompleteAsync(string partialAddress)
         {
-            // TODO: escape html char
             var request = new HttpRequestMessage(
                 method: HttpMethod.Get,
                 requestUri: $"{ApiBaseUrl} + {partialAddress}");
@@ -30,11 +29,8 @@ namespace TennisPlanner.Core.Clients
             if (response.IsSuccessStatusCode)
             {
                 using var responseStream = await response.Content.ReadAsStreamAsync();
-                var a = await response.Content.ReadAsStringAsync();
-
                 var geoApiResult = await JsonSerializer.DeserializeAsync
                     <GeoAPIContract>(responseStream);
-
                 return geoApiResult?.Addresses ?? new List<Address>();
             }
             else

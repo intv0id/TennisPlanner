@@ -15,69 +15,82 @@
 <h1>Recherche de créneaux</h1>
 
 <EditForm Model="@searchModel" OnValidSubmit="@HandleSearch">
-    <InputDate @bind-Value="searchModel.SelectedDate" />
+    <div class="container">
+    <div class="row">
+    <div class="col col-sm-4">
+        <label for="selected-date-form">Date</label>
+        <InputDate @bind-Value="searchModel.SelectedDate" class="input-group date" id="selected-date-form" />
+    </div>
 
-    <br/>
+    <div class="col col-sm-7">
+        <label for="address-player-1">Départ joueur 1</label>
+        <BlazoredTypeahead 
+            SearchMethod="GeoClient.GetAddressAutocompleteAsync"
+            @bind-Value="searchModel.SelectedAddressPlayer1"
+            id="address-player-1">
+            <SelectedTemplate Context="templateContext">
+                @if(templateContext != null)
+                {
+                    <span>
+                        @templateContext.Properties.Name,
+                        @templateContext.Properties.PostCode, 
+                        @templateContext.Properties.City
+                    </span>
+                }
+            </SelectedTemplate>
+            <ResultTemplate Context="templateContext">
+                @if(templateContext != null)
+                {
+                    <span>
+                        @templateContext.Properties.Name, 
+                        @templateContext.Properties.PostCode, 
+                        @templateContext.Properties.City
+                    </span>
+                }
+            </ResultTemplate>
+        </BlazoredTypeahead>
 
-    @if(searchModel.SelectedAddressPlayer1 != null)
-    {
-        <span class="basic-addon1"><i class="bi bi-check"/></span>
-    }
-    <BlazoredTypeahead SearchMethod="GeoClient.GetAddressAutocompleteAsync" @bind-Value="searchModel.SelectedAddressPlayer1">
-        <SelectedTemplate Context="templateContext">
-            @if(templateContext != null)
-            {
-                <span>
-                    @templateContext.Properties.Name,
-                    @templateContext.Properties.PostCode, 
-                    @templateContext.Properties.City
-                </span>
-            }
-        </SelectedTemplate>
-        <ResultTemplate Context="templateContext">
-            @if(templateContext != null)
-            {
-                <span>
-                    @templateContext.Properties.Name, 
-                    @templateContext.Properties.PostCode, 
-                    @templateContext.Properties.City
-                </span>
-            }
-        </ResultTemplate>
-    </BlazoredTypeahead>
+        <br/>
+        
+        <label for="address-player-2">Départ joueur 2</label>
+        <BlazoredTypeahead 
+            SearchMethod="GeoClient.GetAddressAutocompleteAsync" 
+            @bind-Value="searchModel.SelectedAddressPlayer2"
+            id="address-player-1">
+            <SelectedTemplate Context="templateContext">
+                @if(templateContext != null)
+                {
+                    <span>
+                        @templateContext.Properties.Name,
+                        @templateContext.Properties.PostCode, 
+                        @templateContext.Properties.City
+                    </span>
+                }
+            </SelectedTemplate>
+            <ResultTemplate Context="templateContext">
+                @if(templateContext != null)
+                {
+                    <span>
+                        @templateContext.Properties.Name, 
+                        @templateContext.Properties.PostCode, 
+                        @templateContext.Properties.City
+                    </span>
+                }
+            </ResultTemplate>
+        </BlazoredTypeahead>
+        @if(searchModel.SelectedAddressPlayer2 != null)
+        {
+            <span class="basic-addon1"><i class="bi bi-check"/></span>
+        }
 
-    <br/>
-    
-    @if(searchModel.SelectedAddressPlayer2 != null)
-    {
-        <span class="basic-addon1"><i class="bi bi-check"/></span>
-    }
-    <BlazoredTypeahead SearchMethod="GeoClient.GetAddressAutocompleteAsync" @bind-Value="searchModel.SelectedAddressPlayer2">
-        <SelectedTemplate Context="templateContext">
-            @if(templateContext != null)
-            {
-                <span>
-                    @templateContext.Properties.Name,
-                    @templateContext.Properties.PostCode, 
-                    @templateContext.Properties.City
-                </span>
-            }
-        </SelectedTemplate>
-        <ResultTemplate Context="templateContext">
-            @if(templateContext != null)
-            {
-                <span>
-                    @templateContext.Properties.Name, 
-                    @templateContext.Properties.PostCode, 
-                    @templateContext.Properties.City
-                </span>
-            }
-        </ResultTemplate>
-    </BlazoredTypeahead>
+    </div>
+    </div>
     
     <br/>
 
     <button class="btn btn-primary" type="submit" disabled="@(!ValidateFields())">Chercher</button>
+
+    </div>
 </EditForm>
 
 @if (Availabilities != null)
@@ -93,8 +106,8 @@
                 <th>Eclairé</th>
                 @if(TransportSearchEnabled())
                 {
-                    <th>Transports joueur 1</th>
-                    <th>Transports joueur 2</th>
+                    <th>Transport joueur 1<br/>(dont marche)</th>
+                    <th>Transport joueur 2<br/>(dont marche)</th>
                 }
 
             </tr>
@@ -102,19 +115,43 @@
         <tbody>
             @foreach (var courtAvailable in Availabilities)
             {
-            <tr>
-                <td>@courtAvailable.TimeRange.StartHour - @courtAvailable.TimeRange.EndHour</td>
-                <td>@courtAvailable.CourtInfo.Facility.Name</td>
-                <td>@courtAvailable.CourtInfo.Title</td>
-                <td>@courtAvailable.CourtInfo.Ground</td>
-                <td>@courtAvailable.CourtInfo.Roof</td>
-                <td>@courtAvailable.CourtInfo.Light</td>
-                @if(TransportSearchEnabled())
-                {
-                    <th>@courtAvailable.TravelInfo.TimeFromAdress1.Minute m</th>
-                    <th>@courtAvailable.TravelInfo.TimeFromAdress2.Minute m</th>
-                }
-            </tr>
+                <tr>
+                    <td>@courtAvailable.TimeRange.StartHour h - @courtAvailable.TimeRange.EndHour h</td>
+                    <td>@courtAvailable.CourtInfo.Facility.Name</td>
+                    <td>@courtAvailable.CourtInfo.Title</td>
+                    <td>@courtAvailable.CourtInfo.Ground</td>
+                    <td>@courtAvailable.CourtInfo.Roof</td>
+                    <td>@courtAvailable.CourtInfo.Light</td>
+                    @if (TransportSearchEnabled())
+                    {
+                        <td>
+                            @if (courtAvailable.TravelInfo.JourneyDurationFromAdress1 == null)
+                            {
+                                <span>N/A</span>
+                            }
+                            else
+                            {
+                                <span>
+                                    @(courtAvailable.TravelInfo.JourneyDurationFromAdress1?.TotalDurationInSeconds / 60)'
+                                    (@(courtAvailable.TravelInfo.JourneyDurationFromAdress1?.WalkingDurationInSeconds / 60)')
+                                </span>
+                            }
+                        </td>
+                        <td>
+                            @if (courtAvailable.TravelInfo.JourneyDurationFromAdress2 == null)
+                            {
+                                <span>N/A</span>
+                            }
+                            else
+                            {
+                                <span>
+                                    @(courtAvailable.TravelInfo.JourneyDurationFromAdress2?.TotalDurationInSeconds / 60)'
+                                    (@(courtAvailable.TravelInfo.JourneyDurationFromAdress2?.WalkingDurationInSeconds / 60)')
+                                </span>
+                            }
+                        </td>
+                    }
+                </tr>
             }
         </tbody>
     </table>
@@ -163,7 +200,7 @@
 
         if (transportSearch)
         {
-            tennisSlots = tennisSlots.Select(a => GetTransportationTimes(a));
+            tennisSlots = await Task.WhenAll(tennisSlots.Select(GetTransportationTimesAsync));
         }
 
         tennisSlots = orderSlots(tennisSlots);
@@ -171,7 +208,7 @@
         return tennisSlots;
     }
 
-    private TimeSlot GetTransportationTimes(TimeSlot timeSlot)
+    private async Task<TimeSlot> GetTransportationTimesAsync(TimeSlot timeSlot)
     {
         if (searchModel.SelectedAddressPlayer1 == null || searchModel.SelectedAddressPlayer2 == null)
         {
@@ -191,17 +228,17 @@
             minute: 0,
             second: 0);
 
-        var transportationTime1 = TransportClient.GetTransportationTime(
+        var transportationTime1 = await TransportClient.GetTransportationTimeInMinutesAsync(
             arrivalTime: transportationArrivalDate,
             fromGeoCoordinates: searchModel.SelectedAddressPlayer1.Geometry.Coordinates.ToGeoCoordinates(),
             toGeoCoordinates: timeSlot.CourtInfo.Facility.Coordinates);
-        var transportationTime2 = TransportClient.GetTransportationTime(
+        var transportationTime2 = await TransportClient.GetTransportationTimeInMinutesAsync(
             arrivalTime: transportationArrivalDate,
-            fromGeoCoordinates: searchModel.SelectedAddressPlayer1.Geometry.Coordinates.ToGeoCoordinates(),
+            fromGeoCoordinates: searchModel.SelectedAddressPlayer2.Geometry.Coordinates.ToGeoCoordinates(),
             toGeoCoordinates: timeSlot.CourtInfo.Facility.Coordinates);
 
-        timeSlot.TravelInfo.TimeFromAdress1 = transportationTime1;
-        timeSlot.TravelInfo.TimeFromAdress2 = transportationTime2;
+        timeSlot.TravelInfo.JourneyDurationFromAdress1 = transportationTime1;
+        timeSlot.TravelInfo.JourneyDurationFromAdress2 = transportationTime2;
 
         return timeSlot;
     }
@@ -218,8 +255,8 @@
 
         if (TransportSearchEnabled())
         {
-            return orderedByTimeSlots.ThenByDescending(s => 
-                travelTimeMetric(s.TravelInfo.TimeFromAdress1, s.TravelInfo.TimeFromAdress2));
+            return orderedByTimeSlots.ThenBy(s => 
+                travelTimeMetric(s.TravelInfo.JourneyDurationFromAdress1?.TotalDurationInSeconds, s.TravelInfo.JourneyDurationFromAdress1?.TotalDurationInSeconds));
         }
 
         return orderedByTimeSlots;
@@ -241,12 +278,14 @@
             && searchModel?.SelectedAddressPlayer2 != null;
     }
 
-    private double travelTimeMetric(DateTime duration1, DateTime duration2)
+    private double travelTimeMetric(int? duration1, int? duration2)
     {
-        var minutes1 = duration1.Minute;
-        var minutes2 = duration2.Minute;
+        if (duration1 == null || duration2 == null)
+        {
+            return double.PositiveInfinity;
+        }
 
-        return Math.Pow(minutes1, 2) + Math.Pow(minutes2, 2);
+        return Math.Pow((int)duration1, 2) + Math.Pow((int)duration2, 2);
     }
 
     private async Task OnPartialAddress1Changed(string value)

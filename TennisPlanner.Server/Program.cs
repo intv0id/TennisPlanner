@@ -8,9 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<ITennisClient, TennisParisClient>();
-builder.Services.AddSingleton<ITransportClient, RatpClient>();
+builder.Services.AddSingleton<ITransportClient, IdfMobilitesClient>();
 builder.Services.AddSingleton<IGeoClient, GeoClient>();
 builder.Services.AddSingleton<ILoggerService, LoggerService>(_ => LoggerService.Instance);
+builder.Services.AddSingleton<ITokenProvider, TokenProvider>();
 builder.Services.AddSingleton<INotificationService, NotificationService>();
 
 var app = builder.Build();

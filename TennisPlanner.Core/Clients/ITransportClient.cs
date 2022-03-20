@@ -1,10 +1,12 @@
 ﻿namespace TennisPlanner.Core.Clients
 {
     using System;
+    using System.Threading.Tasks;
     using TennisPlanner.Core.Contracts.Location;
+    using TennisPlanner.Core.Contracts.Transport;
 
     public interface ITransportClient
     {
-        DateTime GetTransportationTime(DateTime arrivalTime, GeoCoordinates fromGeoCoordinates, GeoCoordinates toGeoCoordinates);
+        Task<JourneyDuration?> GetTransportationTimeInMinutesAsync(DateTime arrivalTime, GeoCoordinates fromGeoCoordinates, GeoCoordinates toGeoCoordinates);
     }
 }
