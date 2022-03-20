@@ -9,6 +9,7 @@ namespace TennisPlanner.Core.Contracts
             TimeRange = timeRange;
             Status = status;
             CourtInfo = courtInfo;
+            TravelInfo = new();
         }
 
         public TimeRange TimeRange { get; }

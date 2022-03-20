@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TennisPlanner.Core.Contracts;
 using TennisPlanner.Core.Enum;
+using TennisPlanner.Core.Resources;
 
 namespace TennisPlanner.Core.Clients
 {
@@ -16,14 +17,20 @@ namespace TennisPlanner.Core.Clients
             "https://tennis.paris.fr/tennis/jsp/site/Portal.jsp?page=tennisParisien&view=les_tennis_parisiens";
         private const string tennisAvalabilitySearch =
             "https://tennis.paris.fr/tennis/jsp/site/Portal.jsp?page=recherche&action=ajax_load_planning";
-        private const string timeRangeFormat = "^(?<startHour>[0-9]{1,2}h) - (?<endHour>[0-9]{1,2})h$";
+        private const string timeRangeFormat = "^(?<startHour>[0-9]{1,2})h - (?<endHour>[0-9]{1,2})h$";
 
         private static readonly Regex timeRangeRegex = new Regex(@timeRangeFormat, RegexOptions.Compiled);
 
+        private readonly HttpClient _httpClient;
+
+        public TennisParisClient()
+        {
+            _httpClient = new HttpClient();
+        }
+
         public async Task<IEnumerable<TennisFacility>> GetTennisCourtsListAsync()
         {
-            using var client = new HttpClient();
-            var content = await client.GetStringAsync(tennisListUrl);
+            var content = await _httpClient.GetStringAsync(tennisListUrl);
             var document = new HtmlDocument();
             document.LoadHtml(content);
             HtmlNode tennisListHtml = document.GetElementbyId("tennisParisiens");
@@ -42,8 +49,16 @@ namespace TennisPlanner.Core.Clients
                 var court = new TennisFacility
                 {
                     Name = items[1],
-                    Adress = items[2],
+                    Address = items[2],
                     CourtsCount = int.TryParse(items[3], out int count) ? count : -1,
+                };
+
+                var coordinates = GeoLocations.ResourceManager.GetString(court.Name).Split(";");
+
+                court.Coordinates = new Contracts.Location.GeoCoordinates()
+                {
+                    Latitude = double.Parse(coordinates[0]),
+                    Longitude = double.Parse(coordinates[1]),
                 };
 
                 tennisCourtsList.Add(court);
@@ -54,14 +69,13 @@ namespace TennisPlanner.Core.Clients
 
         public async Task<IEnumerable<TimeSlot>> GetTimeSlotListAsync(TennisFacility tennisFacility, DateTime day)
         {
-            using var client = new HttpClient();
             var httpContent = new List<KeyValuePair<string, string>>
             {
                 KeyValuePair.Create("date_selected", $"{day:dd/MM/yyyy}"),
                 KeyValuePair.Create( "name_tennis", tennisFacility.Name.ToUpperInvariant().Replace("TENNIS ", "").Replace(" ", "+") ),
             };
             using var req = new HttpRequestMessage(HttpMethod.Post, tennisAvalabilitySearch) { Content = new FormUrlEncodedContent(httpContent) };
-            var postRequest = await client.SendAsync(req);
+            var postRequest = await _httpClient.SendAsync(req);
             var content = await postRequest.Content.ReadAsStringAsync();
             var document = new HtmlDocument();
             document.LoadHtml(content);

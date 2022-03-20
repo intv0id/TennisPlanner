@@ -1,10 +1,11 @@
 ﻿using System;
+using TennisPlanner.Core.Contracts.Transport;
 
 namespace TennisPlanner.Core.Contracts
 {
     public class TravelInfo
     {
-        public DateTime TimeFromAdress1 { get; set; }
-        public DateTime TimeFromAdress2 { get; set; }
+        public JourneyDuration? JourneyDurationFromAdress1 { get; set; }
+        public JourneyDuration? JourneyDurationFromAdress2 { get; set; }
     }
 }

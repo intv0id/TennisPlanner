@@ -6,7 +6,7 @@ namespace TennisPlanner.Core.Contracts
     {
         public string Name;
         public string Url;
-        public string Adress;
+        public string Address;
         public int CourtsCount;
         public GeoCoordinates Coordinates;
     }
