@@ -1,5 +1,6 @@
 using TennisPlanner.Core.Clients;
 using TennisPlanner.Server.Services;
+using TennisPlanner.Shared.Services;
 using TennisPlanner.Shared.Services.Logging;
 
 var builder = WebApplication.CreateBuilder(args);

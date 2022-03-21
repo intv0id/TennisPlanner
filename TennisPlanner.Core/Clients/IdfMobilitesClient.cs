@@ -16,12 +16,16 @@ namespace TennisPlanner.Core.Clients
 {
     public class IdfMobilitesClient : ITransportClient
     {
-        const string baseApiUrl = "https://traffic.api.iledefrance-mobilites.fr/v2/mri/coverage/idfm/journeys?";
+        const string baseApiUrl = "https://traffic.api.iledefrance-mobilites.fr/v2/mri/coverage/idfm/";
+        const string journeyQuery = "journeys?";
         private readonly HttpClient _httpClient;
 
         public IdfMobilitesClient(ITokenProvider tokenProvider)
         {
-            _httpClient = new HttpClient();
+            _httpClient = new HttpClient()
+            {
+                BaseAddress = new Uri(baseApiUrl),
+            };
             _httpClient.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", tokenProvider.GetIdfMobiliteToken());
         }
@@ -54,7 +58,7 @@ namespace TennisPlanner.Core.Clients
         private HttpRequestMessage craftQuery(DateTime arrivalTime, GeoCoordinates fromGeoCoordinates, GeoCoordinates toGeoCoordinates)
         {
             var urlBuilder = new StringBuilder();
-            urlBuilder.Append(baseApiUrl);
+            urlBuilder.Append(journeyQuery);
             urlBuilder.Append(
                 $"from={fromGeoCoordinates.Latitude.ToString(CultureInfo.InvariantCulture)}" +
                 $";{fromGeoCoordinates.Longitude.ToString(CultureInfo.InvariantCulture)}");

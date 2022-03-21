@@ -13,10 +13,9 @@ namespace TennisPlanner.Core.Clients
 {
     public class TennisParisClient : ITennisClient
     {
-        private const string tennisListUrl = 
-            "https://tennis.paris.fr/tennis/jsp/site/Portal.jsp?page=tennisParisien&view=les_tennis_parisiens";
-        private const string tennisAvalabilitySearch =
-            "https://tennis.paris.fr/tennis/jsp/site/Portal.jsp?page=recherche&action=ajax_load_planning";
+        private const string baseApiUrl = "https://tennis.paris.fr/tennis/jsp/site/";
+        private const string tennisListQuery = "Portal.jsp?page=tennisParisien&view=les_tennis_parisiens";
+        private const string tennisAvalabilityQuery = "Portal.jsp?page=recherche&action=ajax_load_planning";
         private const string timeRangeFormat = "^(?<startHour>[0-9]{1,2})h - (?<endHour>[0-9]{1,2})h$";
 
         private static readonly Regex timeRangeRegex = new Regex(@timeRangeFormat, RegexOptions.Compiled);
@@ -25,12 +24,15 @@ namespace TennisPlanner.Core.Clients
 
         public TennisParisClient()
         {
-            _httpClient = new HttpClient();
+            _httpClient = new HttpClient()
+            {
+                BaseAddress = new Uri(baseApiUrl),
+            };
         }
 
         public async Task<IEnumerable<TennisFacility>> GetTennisCourtsListAsync()
         {
-            var content = await _httpClient.GetStringAsync(tennisListUrl);
+            var content = await _httpClient.GetStringAsync(tennisListQuery);
             var document = new HtmlDocument();
             document.LoadHtml(content);
             HtmlNode tennisListHtml = document.GetElementbyId("tennisParisiens");
@@ -74,7 +76,7 @@ namespace TennisPlanner.Core.Clients
                 KeyValuePair.Create("date_selected", $"{day:dd/MM/yyyy}"),
                 KeyValuePair.Create( "name_tennis", tennisFacility.Name.ToUpperInvariant().Replace("TENNIS ", "").Replace(" ", "+") ),
             };
-            using var req = new HttpRequestMessage(HttpMethod.Post, tennisAvalabilitySearch) { Content = new FormUrlEncodedContent(httpContent) };
+            using var req = new HttpRequestMessage(HttpMethod.Post, tennisAvalabilityQuery) { Content = new FormUrlEncodedContent(httpContent) };
             var postRequest = await _httpClient.SendAsync(req);
             var content = await postRequest.Content.ReadAsStringAsync();
             var document = new HtmlDocument();

@@ -1,25 +1,52 @@
 ﻿@page "/search"
-@inject ITennisClient TennisClient
-@inject IGeoClient GeoClient
-@inject ITransportClient TransportClient
-@inject ILoggerService LoggerService
-@inject INotificationService NotificationService
-@using Blazored.Typeahead
-@using TennisPlanner.Core.Contracts
-@using TennisPlanner.Core.Clients
-@using TennisPlanner.Core.Extensions
-@using TennisPlanner.Server.Models
-@using TennisPlanner.Server.Services
-@using TennisPlanner.Shared.Services.Logging
 
-<h1>Recherche de créneaux</h1>
+@inject IGeoClient GeoClient
+
+@using Blazored.Typeahead
+@using TennisPlanner.Core.Clients
+
+<div class="container">
+<div class="row">
+    <nav class="navbar navbar-light bg-light justify-content-between">
+        <a class="navbar-brand">Recherche de créneaux</a>
+        @if (collapseSearch)
+        {
+            <button class="btn btn-outline-success my-2 my-sm-0" @onclick="ExpandSearch">Chercher</button>
+        }
+    </nav>
+</div>
+<div class="row">
+    <div class="@CollapseSearch">
 
 <EditForm Model="@searchModel" OnValidSubmit="@HandleSearch">
     <div class="container">
     <div class="row">
-    <div class="col col-sm-4">
-        <label for="selected-date-form">Date</label>
-        <InputDate @bind-Value="searchModel.SelectedDate" class="input-group date" id="selected-date-form" />
+    <div class="col col-sm-4 form-group">
+        <label for="selected-date-form" class="required-label">Date</label>
+        <InputDate @bind-Value="searchModel.SelectedDate" class="input-group date" id="selected-date-form"/>
+
+        <label for="range-sliders-group">Heure</label>
+        <div id="range-sliders-group" class="container">
+            @foreach(var RangeHoursSelector in searchModel.HourRangeSelectors)
+            {
+                <div class="row">
+                    <div class="col-sm-2"><span>@(RangeHoursSelector.Min)h</span></div>
+                    <div class="col-sm-6">
+                        <input class="form-range col-sm-12" type="range" min="0" max="24" step="1" @bind="@RangeHoursSelector.Min" />
+                        <input class="form-range col-sm-12" type="range" min="0" max="24" step="1" @bind="@RangeHoursSelector.Max" />
+                    </div>
+                    <div class="col-sm-2"><span>@(RangeHoursSelector.Max)h</span></div>
+                    <div class="col-sm-2">
+                        <a class="btn btn-link" @onclick="_ => RemoveHourRangeSelector(RangeHoursSelector)">
+                            <span class="oi oi-minus"></span>
+                        </a>
+                    </div>
+                </div>
+            }
+            <div class="row">
+                <a class="btn btn-link" @onclick="AddHourRangeSelector"><span class="oi oi-plus"></span></a>
+            </div>
+        </div>
     </div>
 
     <div class="col col-sm-7">
@@ -92,7 +119,11 @@
 
     </div>
 </EditForm>
+</div>
 
+</div>
+
+<div class="row">
 @if (Availabilities != null)
 {
     <table class="table">
@@ -156,145 +187,7 @@
         </tbody>
     </table>
 }
+</div>
+</div>
 
-@code {
-    SearchModel searchModel = new();
-    bool IsSearchEnabled;
-    IEnumerable<TimeSlot>? Availabilities;
 
-    protected override async Task OnInitializedAsync()
-    {
-        await Task.Yield();
-        searchModel.SelectedDate = DateTime.Today;
-    }
-
-    private async Task HandleSearch()
-    {
-        if (searchModel.SelectedDate == null)
-        {
-            LoggerService.Log(
-                logLevel: LogLevel.Error,
-                operationName: $"{nameof(Search)}.{nameof(this.HandleSearch)}",
-                message: $"{nameof(searchModel.SelectedDate)} is null.");
-
-            NotificationService.Display(
-                level: LogLevel.Error,
-                message: "A error occured.");
-
-            return;
-        }
-
-        Availabilities = await fetchAvailabilitiesAsync(
-            date: searchModel.SelectedDate.Value,
-            transportSearch: TransportSearchEnabled());
-    }
-
-    private async Task<IEnumerable<TimeSlot>> fetchAvailabilitiesAsync(DateTime date, bool transportSearch)
-    {
-        var courts = await TennisClient.GetTennisCourtsListAsync();
-        var availabilities = await Task.WhenAll(
-            courts.Select(async court => await TennisClient.GetTimeSlotListAsync(court, date)));
-        var tennisSlots = availabilities.SelectMany(x => x);
-
-        tennisSlots = filterSlots(tennisSlots);
-
-        if (transportSearch)
-        {
-            tennisSlots = await Task.WhenAll(tennisSlots.Select(GetTransportationTimesAsync));
-        }
-
-        tennisSlots = orderSlots(tennisSlots);
-
-        return tennisSlots;
-    }
-
-    private async Task<TimeSlot> GetTransportationTimesAsync(TimeSlot timeSlot)
-    {
-        if (searchModel.SelectedAddressPlayer1 == null || searchModel.SelectedAddressPlayer2 == null)
-        {
-            throw new ArgumentException("Selected address is null.");
-        }
-
-        if (searchModel.SelectedDate == null)
-        {
-            throw new ArgumentException("Selected date is null.");
-        }
-
-        var transportationArrivalDate = new DateTime(
-            year: searchModel.SelectedDate.Value.Year,
-            month: searchModel.SelectedDate.Value.Month,
-            day: searchModel.SelectedDate.Value.Day,
-            hour: timeSlot.TimeRange.StartHour,
-            minute: 0,
-            second: 0);
-
-        var transportationTime1 = await TransportClient.GetTransportationTimeInMinutesAsync(
-            arrivalTime: transportationArrivalDate,
-            fromGeoCoordinates: searchModel.SelectedAddressPlayer1.Geometry.Coordinates.ToGeoCoordinates(),
-            toGeoCoordinates: timeSlot.CourtInfo.Facility.Coordinates);
-        var transportationTime2 = await TransportClient.GetTransportationTimeInMinutesAsync(
-            arrivalTime: transportationArrivalDate,
-            fromGeoCoordinates: searchModel.SelectedAddressPlayer2.Geometry.Coordinates.ToGeoCoordinates(),
-            toGeoCoordinates: timeSlot.CourtInfo.Facility.Coordinates);
-
-        timeSlot.TravelInfo.JourneyDurationFromAdress1 = transportationTime1;
-        timeSlot.TravelInfo.JourneyDurationFromAdress2 = transportationTime2;
-
-        return timeSlot;
-    }
-
-    private IEnumerable<TimeSlot> filterSlots(IEnumerable<TimeSlot> slots)
-    {
-        // TODO filter slots by hour
-        return slots;
-    }
-
-    private IEnumerable<TimeSlot> orderSlots(IEnumerable<TimeSlot> slots)
-    {
-        var orderedByTimeSlots = slots.OrderBy(s => s.TimeRange.StartHour);
-
-        if (TransportSearchEnabled())
-        {
-            return orderedByTimeSlots.ThenBy(s => 
-                travelTimeMetric(s.TravelInfo.JourneyDurationFromAdress1?.TotalDurationInSeconds, s.TravelInfo.JourneyDurationFromAdress1?.TotalDurationInSeconds));
-        }
-
-        return orderedByTimeSlots;
-    }
-
-    private bool ValidateFields()
-    {
-        var selectedDate = searchModel.SelectedDate;
-        if (selectedDate == null || selectedDate < DateTime.Today || selectedDate > DateTime.Today.AddDays(7))
-        {
-            return false;
-        }
-        return true;
-    }
-
-    private bool TransportSearchEnabled()
-    {
-        return searchModel?.SelectedAddressPlayer1 != null
-            && searchModel?.SelectedAddressPlayer2 != null;
-    }
-
-    private double travelTimeMetric(int? duration1, int? duration2)
-    {
-        if (duration1 == null || duration2 == null)
-        {
-            return double.PositiveInfinity;
-        }
-
-        return Math.Pow((int)duration1, 2) + Math.Pow((int)duration2, 2);
-    }
-
-    private async Task OnPartialAddress1Changed(string value)
-    {
-        searchModel.AddressSuggestionsPlayer1 = await GeoClient.GetAddressAutocompleteAsync(value);
-    }
-
-    private async Task OnPartialAddress2Changed(string value)
-    {
-        searchModel.AddressSuggestionsPlayer2 = await GeoClient.GetAddressAutocompleteAsync(value);
-    }
-}
