@@ -1,6 +1,7 @@
 ﻿namespace TennisPlanner.Server.Models
 {
-    public class HourRangeSelector
+    public class HourRangeSelectorModel
+
     {
         private int min=8;
         private int max=22;

@@ -11,6 +11,6 @@
         public Address? SelectedAddressPlayer1;
         public Address? SelectedAddressPlayer2;
 
-        public List<HourRangeSelector> HourRangeSelectors = new List<HourRangeSelector>();
+        public List<HourRangeSelectorModel> HourRangeSelectors = new List<HourRangeSelectorModel>();
     }
 }
