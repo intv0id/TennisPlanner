@@ -47,10 +47,10 @@ namespace TennisPlanner.Server.Pages
 
         private void AddHourRangeSelector()
         {
-            searchModel.HourRangeSelectors.Add(new HourRangeSelector());
+            searchModel.HourRangeSelectors.Add(new HourRangeSelectorModel());
         }
 
-        private void RemoveHourRangeSelector(HourRangeSelector hourRangeSelector)
+        private void RemoveHourRangeSelector(HourRangeSelectorModel hourRangeSelector)
         {
             searchModel.HourRangeSelectors.Remove(hourRangeSelector);
         }
@@ -64,7 +64,7 @@ namespace TennisPlanner.Server.Pages
                 return;
             }
 
-            Availabilities = await fetchAvailabilitiesAsync(date: searchModel.SelectedDate.Value, transportSearch: TransportSearchEnabled());
+            Availabilities = await fetchAvailabilitiesAsync(date: searchModel.SelectedDate.Value, transportSearch: IsTransportSearchEnabled);
             collapseSearch = true;
         }
 
@@ -118,9 +118,11 @@ namespace TennisPlanner.Server.Pages
         private IEnumerable<TimeSlot> orderSlots(IEnumerable<TimeSlot> slots)
         {
             var orderedByTimeSlots = slots.OrderBy(s => s.TimeRange.StartHour);
-            if (TransportSearchEnabled())
+            if (IsTransportSearchEnabled)
             {
-                return orderedByTimeSlots.ThenBy(s => travelTimeMetric(s.TravelInfo.JourneyDurationFromAdress1?.TotalDurationInSeconds, s.TravelInfo.JourneyDurationFromAdress1?.TotalDurationInSeconds));
+                return orderedByTimeSlots.ThenBy(s => travelTimeMetric(
+                    s.TravelInfo.JourneyDurationFromAdress1?.TotalDurationInSeconds, 
+                    s.TravelInfo.JourneyDurationFromAdress1?.TotalDurationInSeconds));
             }
 
             return orderedByTimeSlots;
@@ -137,10 +139,9 @@ namespace TennisPlanner.Server.Pages
             return true;
         }
 
-        private bool TransportSearchEnabled()
-        {
-            return searchModel?.SelectedAddressPlayer1 != null && searchModel?.SelectedAddressPlayer2 != null;
-        }
+        private bool IsTransportSearchEnabled =>
+            searchModel?.SelectedAddressPlayer1 != null 
+            && searchModel?.SelectedAddressPlayer2 != null;
 
         private double travelTimeMetric(int? duration1, int? duration2)
         {

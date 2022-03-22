@@ -1,193 +1,71 @@
-﻿@page "/search"
+﻿@page "/"
 
 @inject IGeoClient GeoClient
 
 @using Blazored.Typeahead
 @using TennisPlanner.Core.Clients
+@using TennisPlanner.Server.Components
 
 <div class="container">
-<div class="row">
-    <nav class="navbar navbar-light bg-light justify-content-between">
-        <a class="navbar-brand">Recherche de créneaux</a>
-        @if (collapseSearch)
-        {
-            <button class="btn btn-outline-success my-2 my-sm-0" @onclick="ExpandSearch">Chercher</button>
-        }
-    </nav>
-</div>
-<div class="row">
-    <div class="@CollapseSearch">
-
-<EditForm Model="@searchModel" OnValidSubmit="@HandleSearch">
-    <div class="container">
     <div class="row">
-    <div class="col col-sm-4 form-group">
-        <label for="selected-date-form" class="required-label">Date</label>
-        <InputDate @bind-Value="searchModel.SelectedDate" class="input-group date" id="selected-date-form"/>
-
-        <label for="range-sliders-group">Heure</label>
-        <div id="range-sliders-group" class="container">
-            @foreach(var RangeHoursSelector in searchModel.HourRangeSelectors)
+        <nav class="navbar navbar-light bg-light justify-content-between">
+            <a class="navbar-brand">Recherche de créneaux</a>
+            @if (collapseSearch)
             {
+                <button class="btn btn-outline-success my-2 my-sm-0" @onclick="ExpandSearch">Chercher</button>
+            }
+        </nav>
+    </div>
+    <div class="row">
+        <div class="@CollapseSearch">
+            <EditForm Model="@searchModel" OnValidSubmit="@HandleSearch">
+                <div class="container">
                 <div class="row">
-                    <div class="col-sm-2"><span>@(RangeHoursSelector.Min)h</span></div>
-                    <div class="col-sm-6">
-                        <input class="form-range col-sm-12" type="range" min="0" max="24" step="1" @bind="@RangeHoursSelector.Min" />
-                        <input class="form-range col-sm-12" type="range" min="0" max="24" step="1" @bind="@RangeHoursSelector.Max" />
-                    </div>
-                    <div class="col-sm-2"><span>@(RangeHoursSelector.Max)h</span></div>
-                    <div class="col-sm-2">
-                        <a class="btn btn-link" @onclick="_ => RemoveHourRangeSelector(RangeHoursSelector)">
-                            <span class="oi oi-minus"></span>
-                        </a>
+                <div class="col col-sm-4 form-group">
+                    <label for="selected-date-form" class="required-label">Date</label>
+                    <InputDate @bind-Value="searchModel.SelectedDate" class="input-group date" id="selected-date-form"/>
+
+                    <label for="range-sliders-group">Heure</label>
+                    <div id="range-sliders-group" class="container">
+                        @foreach(var RangeHoursSelectorModel in searchModel.HourRangeSelectors)
+                        {
+                            <div class="row">
+                                <HourRangeSelector Model=@RangeHoursSelectorModel />
+                                <div class="col-sm-2">
+                                    <a class="btn btn-link" @onclick="_ => RemoveHourRangeSelector(RangeHoursSelectorModel)">
+                                        <span class="oi oi-minus"></span>
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                        <div class="row">
+                            <a class="btn btn-link" @onclick="AddHourRangeSelector"><span class="oi oi-plus"></span></a>
+                        </div>
                     </div>
                 </div>
-            }
-            <div class="row">
-                <a class="btn btn-link" @onclick="AddHourRangeSelector"><span class="oi oi-plus"></span></a>
-            </div>
+
+                <div class="col col-sm-7">
+                    <AddressSelector @bind-SelectedAddress="searchModel.SelectedAddressPlayer1" PlayerId="1"/>
+                    <br/>
+                    <AddressSelector @bind-SelectedAddress="searchModel.SelectedAddressPlayer2" PlayerId="2"/>
+                </div>
+                </div>
+    
+                <br/>
+
+                <button class="btn btn-primary" type="submit" disabled="@(!ValidateFields())">Chercher</button>
+
+                </div>
+            </EditForm>
         </div>
     </div>
 
-    <div class="col col-sm-7">
-        <label for="address-player-1">Départ joueur 1</label>
-        <BlazoredTypeahead 
-            SearchMethod="GeoClient.GetAddressAutocompleteAsync"
-            @bind-Value="searchModel.SelectedAddressPlayer1"
-            id="address-player-1">
-            <SelectedTemplate Context="templateContext">
-                @if(templateContext != null)
-                {
-                    <span>
-                        @templateContext.Properties.Name,
-                        @templateContext.Properties.PostCode, 
-                        @templateContext.Properties.City
-                    </span>
-                }
-            </SelectedTemplate>
-            <ResultTemplate Context="templateContext">
-                @if(templateContext != null)
-                {
-                    <span>
-                        @templateContext.Properties.Name, 
-                        @templateContext.Properties.PostCode, 
-                        @templateContext.Properties.City
-                    </span>
-                }
-            </ResultTemplate>
-        </BlazoredTypeahead>
-
-        <br/>
-        
-        <label for="address-player-2">Départ joueur 2</label>
-        <BlazoredTypeahead 
-            SearchMethod="GeoClient.GetAddressAutocompleteAsync" 
-            @bind-Value="searchModel.SelectedAddressPlayer2"
-            id="address-player-1">
-            <SelectedTemplate Context="templateContext">
-                @if(templateContext != null)
-                {
-                    <span>
-                        @templateContext.Properties.Name,
-                        @templateContext.Properties.PostCode, 
-                        @templateContext.Properties.City
-                    </span>
-                }
-            </SelectedTemplate>
-            <ResultTemplate Context="templateContext">
-                @if(templateContext != null)
-                {
-                    <span>
-                        @templateContext.Properties.Name, 
-                        @templateContext.Properties.PostCode, 
-                        @templateContext.Properties.City
-                    </span>
-                }
-            </ResultTemplate>
-        </BlazoredTypeahead>
-        @if(searchModel.SelectedAddressPlayer2 != null)
+    <div class="row">
+        @if (Availabilities != null)
         {
-            <span class="basic-addon1"><i class="bi bi-check"/></span>
+            <AvailabilitiesTable Availabilities=@Availabilities IsTransportSearchEnabled=@IsTransportSearchEnabled/>
         }
-
     </div>
-    </div>
-    
-    <br/>
-
-    <button class="btn btn-primary" type="submit" disabled="@(!ValidateFields())">Chercher</button>
-
-    </div>
-</EditForm>
-</div>
-
-</div>
-
-<div class="row">
-@if (Availabilities != null)
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Heure</th>
-                <th>Lieu</th>
-                <th>Court</th>
-                <th>Sol</th>
-                <th>Couvert</th>
-                <th>Eclairé</th>
-                @if(TransportSearchEnabled())
-                {
-                    <th>Transport joueur 1<br/>(dont marche)</th>
-                    <th>Transport joueur 2<br/>(dont marche)</th>
-                }
-
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var courtAvailable in Availabilities)
-            {
-                <tr>
-                    <td>@courtAvailable.TimeRange.StartHour h - @courtAvailable.TimeRange.EndHour h</td>
-                    <td>@courtAvailable.CourtInfo.Facility.Name</td>
-                    <td>@courtAvailable.CourtInfo.Title</td>
-                    <td>@courtAvailable.CourtInfo.Ground</td>
-                    <td>@courtAvailable.CourtInfo.Roof</td>
-                    <td>@courtAvailable.CourtInfo.Light</td>
-                    @if (TransportSearchEnabled())
-                    {
-                        <td>
-                            @if (courtAvailable.TravelInfo.JourneyDurationFromAdress1 == null)
-                            {
-                                <span>N/A</span>
-                            }
-                            else
-                            {
-                                <span>
-                                    @(courtAvailable.TravelInfo.JourneyDurationFromAdress1?.TotalDurationInSeconds / 60)'
-                                    (@(courtAvailable.TravelInfo.JourneyDurationFromAdress1?.WalkingDurationInSeconds / 60)')
-                                </span>
-                            }
-                        </td>
-                        <td>
-                            @if (courtAvailable.TravelInfo.JourneyDurationFromAdress2 == null)
-                            {
-                                <span>N/A</span>
-                            }
-                            else
-                            {
-                                <span>
-                                    @(courtAvailable.TravelInfo.JourneyDurationFromAdress2?.TotalDurationInSeconds / 60)'
-                                    (@(courtAvailable.TravelInfo.JourneyDurationFromAdress2?.WalkingDurationInSeconds / 60)')
-                                </span>
-                            }
-                        </td>
-                    }
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-</div>
 </div>
 
 

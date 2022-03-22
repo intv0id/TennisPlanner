@@ -1,0 +1,72 @@
+﻿@using TennisPlanner.Core.Contracts
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Heure</th>
+            <th>Lieu</th>
+            <th>Court</th>
+            <th>Sol</th>
+            <th>Couvert</th>
+            <th>Eclairé</th>
+            @if(IsTransportSearchEnabled)
+            {
+                <th>Transport joueur 1<br/>(dont marche)</th>
+                <th>Transport joueur 2<br/>(dont marche)</th>
+            }
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var courtAvailable in Availabilities)
+        {
+            <tr>
+                <td>@courtAvailable.TimeRange.StartHour h - @courtAvailable.TimeRange.EndHour h</td>
+                <td>@courtAvailable.CourtInfo.Facility.Name</td>
+                <td>@courtAvailable.CourtInfo.Title</td>
+                <td>@courtAvailable.CourtInfo.Ground</td>
+                <td>@courtAvailable.CourtInfo.Roof</td>
+                <td>@courtAvailable.CourtInfo.Light</td>
+                @if (IsTransportSearchEnabled)
+                {
+                    <td>
+                        @if (courtAvailable.TravelInfo.JourneyDurationFromAdress1 == null)
+                        {
+                            <span>N/A</span>
+                        }
+                        else
+                        {
+                            <span>
+                                @(courtAvailable.TravelInfo.JourneyDurationFromAdress1?.TotalDurationInSeconds / 60)'
+                                (@(courtAvailable.TravelInfo.JourneyDurationFromAdress1?.WalkingDurationInSeconds / 60)')
+                            </span>
+                        }
+                    </td>
+                    <td>
+                        @if (courtAvailable.TravelInfo.JourneyDurationFromAdress2 == null)
+                        {
+                            <span>N/A</span>
+                        }
+                        else
+                        {
+                            <span>
+                                @(courtAvailable.TravelInfo.JourneyDurationFromAdress2?.TotalDurationInSeconds / 60)'
+                                (@(courtAvailable.TravelInfo.JourneyDurationFromAdress2?.WalkingDurationInSeconds / 60)')
+                            </span>
+                        }
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    [Parameter]
+    [EditorRequired]
+    public  bool IsTransportSearchEnabled { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public IEnumerable<TimeSlot> Availabilities { get; set; }
+}
