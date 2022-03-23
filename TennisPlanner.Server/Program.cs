@@ -1,6 +1,6 @@
 using TennisPlanner.Core.Clients;
+using TennisPlanner.Core.Configuration;
 using TennisPlanner.Server.Services;
-using TennisPlanner.Shared.Services;
 using TennisPlanner.Shared.Services.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,8 +12,12 @@ builder.Services.AddSingleton<ITennisClient, TennisParisClient>();
 builder.Services.AddSingleton<ITransportClient, IdfMobilitesClient>();
 builder.Services.AddSingleton<IGeoClient, GeoClient>();
 builder.Services.AddSingleton<ILoggerService, LoggerService>(_ => LoggerService.Instance);
-builder.Services.AddSingleton<global::TennisPlanner.Core.Clients.IConfigurationProvider, global::TennisPlanner.Core.Clients.ConfigurationProvider>();
 builder.Services.AddSingleton<INotificationService, NotificationService>();
+#if DEBUG
+builder.Services.AddSingleton<IAppConfigurationProvider, LocalConfigurationProvider>();
+#else
+builder.Services.AddSingleton<IAppConfigurationProvider, AzureConfigurationProvider>();
+#endif
 
 var app = builder.Build();
 

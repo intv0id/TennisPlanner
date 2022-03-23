@@ -12,10 +12,11 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using TennisPlanner.Core.Configuration;
 using TennisPlanner.Core.Contracts.Location;
 using TennisPlanner.Core.Contracts.Transport;
 using TennisPlanner.Shared.Services.Logging;
-using Timer = System.Timers.Timer ;
+using Timer = System.Timers.Timer;
 
 namespace TennisPlanner.Core.Clients
 {
@@ -27,11 +28,11 @@ namespace TennisPlanner.Core.Clients
         const int refreshTokenTimeBuffer = 60;
 
         private readonly HttpClient _httpClient;
-        private readonly IConfigurationProvider _configurationProvider;
+        private readonly IAppConfigurationProvider _configurationProvider;
         private readonly SemaphoreSlim refreshingTokenSemaphore = new SemaphoreSlim(initialCount: 1);
         private readonly Timer? tokenRefreshTimer = new Timer();
 
-        public IdfMobilitesClient(IConfigurationProvider configurationProvider)
+        public IdfMobilitesClient(IAppConfigurationProvider configurationProvider)
         {
             _httpClient = new HttpClient()
             {
@@ -60,7 +61,7 @@ namespace TennisPlanner.Core.Clients
         {
             await refreshingTokenSemaphore.WaitAsync();
             try
-            {                
+            {
                 var (clientId, clientSecret) = _configurationProvider.GetIdfMobiliteClientCredentials();
 
                 HttpContent content = new FormUrlEncodedContent(

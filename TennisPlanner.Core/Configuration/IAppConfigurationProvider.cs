@@ -1,6 +1,6 @@
-﻿namespace TennisPlanner.Core.Clients
+﻿namespace TennisPlanner.Core.Configuration
 {
-    public interface IConfigurationProvider
+    public interface IAppConfigurationProvider
     {
         (string clientId, string clientSecret) GetIdfMobiliteClientCredentials();
     }
