@@ -88,7 +88,7 @@ namespace TennisPlanner.Core.Clients
                     _httpClient.DefaultRequestHeaders.Authorization =
                         new AuthenticationHeaderValue("Bearer", tokenApiResult.AccessToken);
                     
-                    tokenRefreshTimer.Interval = tokenApiResult.ExpirationDuration - refreshTokenTimeBuffer;
+                    tokenRefreshTimer.Interval = (tokenApiResult.ExpirationDuration - refreshTokenTimeBuffer)*1000;
                     tokenRefreshTimer.Start();
                 }
                 else
@@ -117,6 +117,7 @@ namespace TennisPlanner.Core.Clients
 
         private void RefreshAccessTokenEvent(object? sender, ElapsedEventArgs e)
         {
+            tokenRefreshTimer.Stop();
             _ = refreshAccessToken();
         }
 
