@@ -16,9 +16,12 @@ namespace TennisPlanner.Shared.Services.Logging
             _logger = new Logger<LoggerService>(loggerFactory);
         }
 
-        public void Log(LogLevel logLevel, string operationName, string message)
+        public void Log(LogLevel logLevel, string operationName, string message, Exception? exception = null)
         {
-            _logger.Log(logLevel, $"{message} in {operationName}.");
+            _logger.Log(
+                logLevel: logLevel, 
+                message: $"{message} in {operationName}.", 
+                exception: exception);
         }
     }
 }
