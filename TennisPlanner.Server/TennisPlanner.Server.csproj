@@ -15,6 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Azure.SignalR" Version="1.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\TennisPlanner.Core\TennisPlanner.Core.csproj" />
     <ProjectReference Include="..\TennisPlanner.Shared\TennisPlanner.Shared.csproj" />
   </ItemGroup>
