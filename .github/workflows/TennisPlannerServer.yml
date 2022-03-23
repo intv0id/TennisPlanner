@@ -2,7 +2,7 @@ name: Build and deploy .NET Core app to Windows WebApp TennisPlannerServer
 on:
   push:
     branches:
-    - master
+    - main
 env:
   AZURE_WEBAPP_NAME: TennisPlannerServer
   AZURE_WEBAPP_PACKAGE_PATH: TennisPlanner.Server/publish
