@@ -5,8 +5,8 @@ namespace TennisPlanner.Core.Configuration
 {
     public class AzureConfigurationProvider : IAppConfigurationProvider
     {
-        private const string IdfMobiliteClientIdName = "TennisPlanner.Core.Clients.IdfMobilitesClient.ClientId";
-        private const string IdfMobiliteClientSecretName = "TennisPlanner.Core.Clients.IdfMobilitesClient.ClientSecret";
+        private const string IdfMobiliteClientIdName = "IdfMobilitesClient_ClientId";
+        private const string IdfMobiliteClientSecretName = "IdfMobilitesClient_ClientSecret";
         
         private readonly IConfiguration _configuration;
 
