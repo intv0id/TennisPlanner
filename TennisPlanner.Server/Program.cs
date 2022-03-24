@@ -19,6 +19,8 @@ builder.Services.AddSingleton<IAppConfigurationProvider, LocalConfigurationProvi
 builder.Services.AddSingleton<IAppConfigurationProvider, AzureConfigurationProvider>();
 #endif
 
+builder.Logging.SetMinimumLevel(LogLevel.Debug);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
