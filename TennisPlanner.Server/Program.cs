@@ -1,3 +1,4 @@
+using Radzen;
 using TennisPlanner.Core.Clients;
 using TennisPlanner.Core.Configuration;
 using TennisPlanner.Server.Services;
@@ -12,7 +13,10 @@ builder.Services.AddSingleton<ITennisClient, TennisParisClient>();
 builder.Services.AddSingleton<ITransportClient, IdfMobilitesClient>();
 builder.Services.AddSingleton<IGeoClient, GeoClient>();
 builder.Services.AddSingleton<ILoggerService, LoggerService>(_ => LoggerService.Instance);
-builder.Services.AddSingleton<INotificationService, NotificationService>();
+builder.Services.AddScoped<NotificationService>();
+builder.Services.AddScoped<DialogService>();
+builder.Services.AddScoped<ISearchResultDataProvider, SearchResultDataProvider>();
+builder.Services.AddScoped<ISearchFiltersService, SearchFiltersService> ();
 #if DEBUG
 builder.Services.AddSingleton<IAppConfigurationProvider, LocalConfigurationProvider>();
 #else

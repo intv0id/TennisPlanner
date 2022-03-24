@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -18,161 +17,166 @@ using TennisPlanner.Core.Contracts.Transport;
 using TennisPlanner.Shared.Services.Logging;
 using Timer = System.Timers.Timer;
 
-namespace TennisPlanner.Core.Clients
+namespace TennisPlanner.Core.Clients;
+
+/// <inheritdoc/>
+public class IdfMobilitesClient : ITransportClient
 {
-    public class IdfMobilitesClient : ITransportClient
+    const string tokenUrl = "https://as.api.iledefrance-mobilites.fr/api/oauth/token";
+    const string baseApiUrl = "https://traffic.api.iledefrance-mobilites.fr/v2/mri/coverage/idfm/";
+    const string journeyQuery = "journeys?";
+    const int refreshTokenTimeBuffer = 60;
+
+    private readonly HttpClient _httpClient;
+    private readonly IAppConfigurationProvider _configurationProvider;
+    private readonly SemaphoreSlim refreshingTokenSemaphore = new SemaphoreSlim(initialCount: 1);
+    private readonly Timer? tokenRefreshTimer = new Timer();
+
+    /// <summary>
+    /// Instanciates <see cref="IdfMobilitesClient"./>
+    /// </summary>
+    /// <param name="configurationProvider">The configuration provider.</param>
+    public IdfMobilitesClient(IAppConfigurationProvider configurationProvider)
     {
-        const string tokenUrl = "https://as.api.iledefrance-mobilites.fr/api/oauth/token";
-        const string baseApiUrl = "https://traffic.api.iledefrance-mobilites.fr/v2/mri/coverage/idfm/";
-        const string journeyQuery = "journeys?";
-        const int refreshTokenTimeBuffer = 60;
-
-        private readonly HttpClient _httpClient;
-        private readonly IAppConfigurationProvider _configurationProvider;
-        private readonly SemaphoreSlim refreshingTokenSemaphore = new SemaphoreSlim(initialCount: 1);
-        private readonly Timer? tokenRefreshTimer = new Timer();
-
-        public IdfMobilitesClient(IAppConfigurationProvider configurationProvider)
+        _httpClient = new HttpClient()
         {
-            _httpClient = new HttpClient()
-            {
-                BaseAddress = new Uri(baseApiUrl),
-            };
+            BaseAddress = new Uri(baseApiUrl),
+        };
 
-            _configurationProvider = configurationProvider;
+        _configurationProvider = configurationProvider;
 
-            tokenRefreshTimer.Elapsed += new ElapsedEventHandler(RefreshAccessTokenEvent);
-            _ = refreshAccessToken();
-        }
+        tokenRefreshTimer.Elapsed += new ElapsedEventHandler(RefreshAccessTokenEvent);
+        _ = refreshAccessToken();
+    }
 
-        public async Task<JourneyDuration?> GetTransportationTimeInMinutesAsync(DateTime arrivalTime, GeoCoordinates fromGeoCoordinates, GeoCoordinates toGeoCoordinates)
+    /// <inheritdoc/>
+    public async Task<JourneyDurationDto?> GetTransportationJourneyAsync(DateTime arrivalTime, GeoCoordinates fromGeoCoordinates, GeoCoordinates toGeoCoordinates)
+    {
+        var requestMessage = this.craftQuery(
+            arrivalTime: arrivalTime,
+            fromGeoCoordinates: fromGeoCoordinates,
+            toGeoCoordinates: toGeoCoordinates);
+
+        var journeyApiResult = await AuthentifiedApiCallAsync<IdfMobiliteJourneyDto>(requestMessage);
+
+        return journeyApiResult?.Journeys.FirstOrDefault()?.JourneyDuration;
+    }
+
+    private async Task refreshAccessToken()
+    {
+        await refreshingTokenSemaphore.WaitAsync();
+        try
         {
-            var requestMessage = this.craftQuery(
-                arrivalTime: arrivalTime,
-                fromGeoCoordinates: fromGeoCoordinates,
-                toGeoCoordinates: toGeoCoordinates);
+            var (clientId, clientSecret) = _configurationProvider.GetIdfMobiliteClientCredentials();
 
-            var journeyApiResult = await AuthentifiedApiCallAsync<IdfMobiliteJourneyResponse>(requestMessage);
-
-            return journeyApiResult?.Journeys.FirstOrDefault()?.JourneyDuration;
-        }
-
-        private async Task refreshAccessToken()
-        {
-            await refreshingTokenSemaphore.WaitAsync();
-            try
-            {
-                var (clientId, clientSecret) = _configurationProvider.GetIdfMobiliteClientCredentials();
-
-                HttpContent content = new FormUrlEncodedContent(
-                    new Dictionary<string, string>()
-                    {
-                        { "grant_type", "client_credentials" },
-                        { "scope", "read-data"},
-                        { "client_id", clientId},
-                        { "client_secret", clientSecret},
-                    }
-                );
-                content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
-                content.Headers.ContentType.CharSet = "UTF-8";
-
-                using var authClient = new HttpClient();
-                authClient.DefaultRequestHeaders.ExpectContinue = false;
-                HttpResponseMessage response = await authClient.PostAsync(new Uri(tokenUrl), content);
-
-                if (response.IsSuccessStatusCode)
+            HttpContent content = new FormUrlEncodedContent(
+                new Dictionary<string, string>()
                 {
-                    using var responseStream = await response.Content.ReadAsStreamAsync();
-                    var tokenApiResult = await JsonSerializer.DeserializeAsync
-                        <IdfMobiliteTokenResponse>(responseStream);
-                    _httpClient.DefaultRequestHeaders.Authorization =
-                        new AuthenticationHeaderValue("Bearer", tokenApiResult.AccessToken);
-                    
-                    tokenRefreshTimer.Interval = (tokenApiResult.ExpirationDuration - refreshTokenTimeBuffer)*1000;
-                    tokenRefreshTimer.Start();
+                    { "grant_type", "client_credentials" },
+                    { "scope", "read-data"},
+                    { "client_id", clientId},
+                    { "client_secret", clientSecret},
                 }
-                else
-                {
-                    LoggerService.Instance.Log(
-                        logLevel: LogLevel.Error,
-                        operationName: $"{nameof(GeoClient)}.{nameof(this.GetTransportationTimeInMinutesAsync)}",
-                        message: "Cannot fetch data from IDFM API.");
-                }
-            }
-            catch (Exception ex)
-            {
-                LoggerService.Instance.Log(
-                       logLevel: LogLevel.Error,
-                       operationName: $"{nameof(GeoClient)}.{nameof(this.GetTransportationTimeInMinutesAsync)}",
-                       message: "Exception thrown while fetching token from IDFM API.",
-                       exception: ex);
-                throw;
-            }
-            finally
-            {
-                refreshingTokenSemaphore.Release();
-            }
-            
-        }
+            );
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
+            content.Headers.ContentType.CharSet = "UTF-8";
 
-        private void RefreshAccessTokenEvent(object? sender, ElapsedEventArgs e)
-        {
-            tokenRefreshTimer.Stop();
-            _ = refreshAccessToken();
-        }
-
-        public async Task<T?> AuthentifiedApiCallAsync<T>(HttpRequestMessage requestMessage, bool isRetry = false)
-        {
-            var response = await _httpClient.SendAsync(requestMessage);
+            using var authClient = new HttpClient();
+            authClient.DefaultRequestHeaders.ExpectContinue = false;
+            HttpResponseMessage response = await authClient.PostAsync(new Uri(tokenUrl), content);
 
             if (response.IsSuccessStatusCode)
             {
                 using var responseStream = await response.Content.ReadAsStreamAsync();
-                return await JsonSerializer.DeserializeAsync
-                    <T>(responseStream);
-            }
-            else if (response.StatusCode == HttpStatusCode.Unauthorized && !isRetry)
-            {
-                LoggerService.Instance.Log(
-                    logLevel: LogLevel.Warning,
-                    operationName: $"{nameof(GeoClient)}.{nameof(this.GetTransportationTimeInMinutesAsync)}",
-                    message: "Token is invalid.");
-                await refreshAccessToken();
-                return await AuthentifiedApiCallAsync<T>(
-                    requestMessage: requestMessage,
-                    isRetry = true);
+                var tokenApiResult = await JsonSerializer.DeserializeAsync
+                    <IdfMobiliteTokenDto>(responseStream);
+                _httpClient.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", tokenApiResult.AccessToken);
+                
+                tokenRefreshTimer.Interval = (tokenApiResult.ExpirationDuration - refreshTokenTimeBuffer)*1000;
+                tokenRefreshTimer.Start();
             }
             else
             {
                 LoggerService.Instance.Log(
                     logLevel: LogLevel.Error,
-                    operationName: $"{nameof(GeoClient)}.{nameof(this.GetTransportationTimeInMinutesAsync)}",
-                    message: "Cannot fetch data from IDFM API.");
-                return default(T?);
+                    operationName: $"{nameof(GeoClient)}.{nameof(this.refreshAccessToken)}",
+                    message: "Cannot fetch token from IDFM API.");
             }
         }
-
-        private HttpRequestMessage craftQuery(DateTime arrivalTime, GeoCoordinates fromGeoCoordinates, GeoCoordinates toGeoCoordinates)
+        catch (Exception ex)
         {
-            var urlBuilder = new StringBuilder();
-            urlBuilder.Append(journeyQuery);
-            urlBuilder.Append(
-                $"from={fromGeoCoordinates.Latitude.ToString(CultureInfo.InvariantCulture)}" +
-                $";{fromGeoCoordinates.Longitude.ToString(CultureInfo.InvariantCulture)}");
-            urlBuilder.Append(
-                $"&to={toGeoCoordinates.Latitude.ToString(CultureInfo.InvariantCulture)}" +
-                $";{toGeoCoordinates.Longitude.ToString(CultureInfo.InvariantCulture)}");
-            urlBuilder.Append($"&datetime={arrivalTime.ToString("yyyyMMddHHmmss")}");
-            urlBuilder.Append("&first_section_mode[]=walking");
-            urlBuilder.Append("&last_section_mode[]=walking");
-            urlBuilder.Append("&forbidden_uris[]=" +
-                "physical_mode:Air," +
-                "physical_mode:Boat," +
-                "physical_mode:Ferry," +
-                "physical_mode:Taxi");
-            urlBuilder.Append("&count=1");
-
-            return new HttpRequestMessage(method: HttpMethod.Get, requestUri: urlBuilder.ToString());
+            LoggerService.Instance.Log(
+                   logLevel: LogLevel.Error,
+                   operationName: $"{nameof(GeoClient)}.{nameof(this.refreshAccessToken)}",
+                   message: "Exception thrown while fetching token from IDFM API.",
+                   exception: ex);
+            throw;
         }
+        finally
+        {
+            refreshingTokenSemaphore.Release();
+        }
+        
+    }
+
+    private void RefreshAccessTokenEvent(object? sender, ElapsedEventArgs e)
+    {
+        tokenRefreshTimer.Stop();
+        _ = refreshAccessToken();
+    }
+
+    public async Task<T?> AuthentifiedApiCallAsync<T>(HttpRequestMessage requestMessage, bool isRetry = false)
+    {
+        var response = await _httpClient.SendAsync(requestMessage);
+
+        if (response.IsSuccessStatusCode)
+        {
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+            return await JsonSerializer.DeserializeAsync
+                <T>(responseStream);
+        }
+        else if (response.StatusCode == HttpStatusCode.BadRequest && !isRetry)
+        {
+            LoggerService.Instance.Log(
+                logLevel: LogLevel.Warning,
+                operationName: $"{nameof(GeoClient)}.{nameof(this.AuthentifiedApiCallAsync)}",
+                message: "Token is invalid.");
+            await refreshAccessToken();
+            return await AuthentifiedApiCallAsync<T>(
+                requestMessage: requestMessage,
+                isRetry = true);
+        }
+        else
+        {
+            LoggerService.Instance.Log(
+                logLevel: LogLevel.Error,
+                operationName: $"{nameof(GeoClient)}.{nameof(this.AuthentifiedApiCallAsync)}",
+                message: "Cannot fetch data from IDFM API.");
+            return default(T?);
+        }
+    }
+
+    private HttpRequestMessage craftQuery(DateTime arrivalTime, GeoCoordinates fromGeoCoordinates, GeoCoordinates toGeoCoordinates)
+    {
+        var urlBuilder = new StringBuilder();
+        urlBuilder.Append(journeyQuery);
+        urlBuilder.Append(
+            $"from={fromGeoCoordinates.Latitude.ToString(CultureInfo.InvariantCulture)}" +
+            $";{fromGeoCoordinates.Longitude.ToString(CultureInfo.InvariantCulture)}");
+        urlBuilder.Append(
+            $"&to={toGeoCoordinates.Latitude.ToString(CultureInfo.InvariantCulture)}" +
+            $";{toGeoCoordinates.Longitude.ToString(CultureInfo.InvariantCulture)}");
+        urlBuilder.Append($"&datetime={arrivalTime.ToString("yyyyMMddHHmmss")}");
+        urlBuilder.Append("&first_section_mode[]=walking");
+        urlBuilder.Append("&last_section_mode[]=walking");
+        urlBuilder.Append("&forbidden_uris[]=" +
+            "physical_mode:Air," +
+            "physical_mode:Boat," +
+            "physical_mode:Ferry," +
+            "physical_mode:Taxi");
+        urlBuilder.Append("&count=1");
+
+        return new HttpRequestMessage(method: HttpMethod.Get, requestUri: urlBuilder.ToString());
     }
 }

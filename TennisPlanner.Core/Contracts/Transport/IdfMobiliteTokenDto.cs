@@ -2,7 +2,7 @@
 
 namespace TennisPlanner.Core.Contracts.Transport
 {
-    public class IdfMobiliteTokenResponse
+    public class IdfMobiliteTokenDto
     {
         [JsonPropertyName("access_token")]
         public string AccessToken { get; set; }

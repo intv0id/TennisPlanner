@@ -2,7 +2,7 @@
 
 namespace TennisPlanner.Core.Contracts.Transport
 {
-    public class JourneyDuration
+    public class JourneyDurationDto
     {
         [JsonPropertyName("total")]
         public int TotalDurationInSeconds { get; set; }

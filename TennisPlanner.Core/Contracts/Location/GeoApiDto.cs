@@ -3,9 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace TennisPlanner.Core.Contracts.Location
 {
-    public class GeoAPIContract
+    public class GeoApiDto
     {
         [JsonPropertyName("features")]
-        public IEnumerable<Address> Addresses { get; set; }
+        public IEnumerable<AddressDto> Addresses { get; set; }
     }
 }

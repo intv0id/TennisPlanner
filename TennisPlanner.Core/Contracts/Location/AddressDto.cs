@@ -5,12 +5,15 @@ namespace TennisPlanner.Core.Contracts.Location
     /// <summary>
     /// Implementation of the spec defined in <see href="https://github.com/geocoders/geocodejson-spec/tree/master/draft"/>
     /// </summary>
-    public class Address
+    public class AddressDto
     {
         [JsonPropertyName("geometry")]
-        public Geometry Geometry {get; set;}
+        public GeometryDto Geometry {get; set;}
 
         [JsonPropertyName("properties")]
-        public GeoProperties Properties { get; set; }
+        public GeoPropertiesDto Properties { get; set; }
+
+        [JsonIgnore]
+        public bool Validated => Geometry != null && Properties != null;
     }
 }
