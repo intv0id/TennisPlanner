@@ -1,35 +1,40 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System.Configuration;
 
-namespace TennisPlanner.Core.Configuration
+namespace TennisPlanner.Core.Configuration;
+
+/// <inheritdoc/>
+public class AzureConfigurationProvider : IAppConfigurationProvider
 {
-    public class AzureConfigurationProvider : IAppConfigurationProvider
+    private const string IdfMobiliteClientIdName = "IdfMobilitesClient_ClientId";
+    private const string IdfMobiliteClientSecretName = "IdfMobilitesClient_ClientSecret";
+    
+    private readonly IConfiguration _configuration;
+
+    /// <summary>
+    /// Instanciates <see cref="AzureConfigurationProvider"/>
+    /// </summary>
+    /// <param name="configuration"></param>
+    public AzureConfigurationProvider(IConfiguration configuration)
     {
-        private const string IdfMobiliteClientIdName = "IdfMobilitesClient_ClientId";
-        private const string IdfMobiliteClientSecretName = "IdfMobilitesClient_ClientSecret";
-        
-        private readonly IConfiguration _configuration;
+        _configuration = configuration;
+    }
 
-        public AzureConfigurationProvider(IConfiguration configuration)
+    /// <inheritdoc/>
+    public (string clientId, string clientSecret) GetIdfMobiliteClientCredentials()
+    {
+        var clientId = _configuration[IdfMobiliteClientIdName];
+        if (string.IsNullOrEmpty(clientId))
         {
-            _configuration = configuration;
+            throw new ConfigurationErrorsException($"Cannot find {IdfMobiliteClientIdName} in configuration.");
         }
 
-        public (string clientId, string clientSecret) GetIdfMobiliteClientCredentials()
+        var clientSecret = _configuration[IdfMobiliteClientSecretName];
+        if (string.IsNullOrEmpty(clientSecret))
         {
-            var clientId = _configuration[IdfMobiliteClientIdName];
-            if (string.IsNullOrEmpty(clientId))
-            {
-                throw new ConfigurationErrorsException($"Cannot find {IdfMobiliteClientIdName} in configuration.");
-            }
-
-            var clientSecret = _configuration[IdfMobiliteClientSecretName];
-            if (string.IsNullOrEmpty(clientSecret))
-            {
-                throw new ConfigurationErrorsException($"Cannot find {IdfMobiliteClientSecretName} in configuration.");
-            }
-
-            return (clientId, clientSecret);
+            throw new ConfigurationErrorsException($"Cannot find {IdfMobiliteClientSecretName} in configuration.");
         }
+
+        return (clientId, clientSecret);
     }
 }

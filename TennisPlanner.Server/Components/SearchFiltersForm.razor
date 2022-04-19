@@ -1,0 +1,129 @@
+﻿@using TennisPlanner.Core.Contracts.Location
+@using TennisPlanner.Server.Models
+@using TennisPlanner.Server.Services
+@using System.Linq
+
+@inject ISearchFiltersService SearchFiltersService
+
+<div class="row">
+    <div class="col-md-6">
+        <RadzenFieldset Text="Heure">
+			@foreach (var RangeHoursSelectorModel in SearchFiltersService.HourRangeList)
+			{
+                <RadzenCard>
+                    <div class="col-sm-4">
+                        <span>@(RangeHoursSelectorModel.HourRange.ElementAt(0))h</span>
+                        <RadzenSlider 
+                            Range="true" 
+                            Min="0" 
+                            Max="24" 
+                            @bind-Value=@RangeHoursSelectorModel.HourRange 
+                            TValue="IEnumerable<int>" 
+                            Change=@(args => UpdateRangeSelector(args, RangeHoursSelectorModel)) 
+                            Class="w-100" />
+                        <span>@(RangeHoursSelectorModel.HourRange.ElementAt(1))h</span>
+                    </div>
+                    <div class="col-sm-2">
+                        <a class="btn btn-link" @onclick="_ => SearchFiltersService.RemoveHourRange(RangeHoursSelectorModel)">
+                            <span class="oi oi-minus"></span>
+                        </a>
+                    </div>
+                </RadzenCard>
+			}
+            <div class="row">
+                <a class="btn btn-link" @onclick="AddHourRangeSelector"><span class="oi oi-plus"></span></a>
+            </div>
+        </RadzenFieldset>
+
+        <RadzenFieldset Text="Addresse">
+			@foreach (var addressModel in SearchFiltersService.AddressesList)
+			{
+                <RadzenCard>
+                    <div class="col-sm-4">
+                        <AddressSelector @bind-SelectedAddress=@addressModel.Value/>
+                    </div>
+                    <div class="col-sm-2">
+                        <a class="btn btn-link" @onclick="_ => SearchFiltersService.RemovePlayerAddress(addressModel)">
+                            <span class="oi oi-minus"></span>
+                        </a>
+                    </div>
+                </RadzenCard>
+			}
+
+            @if(SearchFiltersService.AddressesList.All(x => x.Validated))
+            {
+                <div class="row">
+                    <a class="btn btn-link" @onclick="AddPlayerAddress"><span class="oi oi-plus"></span></a>
+                </div>
+            }
+        </RadzenFieldset>
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    [EditorRequired]
+    public SearchModel searchModel {get; set;}
+
+    protected override void OnInitialized()
+    {
+        SearchFiltersService.AddHourRangeEvent += OnAddHourRangeEvent;
+        SearchFiltersService.RemoveHourRangeEvent += OnRemoveHourRangeEvent;
+        SearchFiltersService.AddPlayerAddressEvent += OnAddPlayerAddressEvent;
+        SearchFiltersService.RemovePlayerAddressEvent += OnRemovePlayerAddressEvent;
+    }
+
+    private void AddHourRangeSelector()
+    {
+        SearchFiltersService.AddHourRange(new HourRangeSelectorModel()
+            {
+                HourRange = new List<int> { 0, 24 },
+            });
+    }
+
+    private void AddPlayerAddress()
+    {
+        SearchFiltersService.AddPlayerAddress(new AddressModel());
+    }
+
+    private void UpdateRangeSelector(IEnumerable<int> hourRange, HourRangeSelectorModel hrModel)
+    {
+        hrModel.HourRange = hourRange;
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    private void OnAddPlayerAddressEvent(object? sender, AddressModel address)
+    {
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+    private void OnRemovePlayerAddressEvent(object? sender, AddressModel address)
+    {
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    private void OnAddHourRangeEvent(object? sender, HourRangeSelectorModel hourRangeSelectorModel)
+    {
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    private void OnRemoveHourRangeEvent(object? sender, HourRangeSelectorModel hourRangeSelectorModel)
+    {
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+}

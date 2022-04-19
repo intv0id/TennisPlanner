@@ -2,7 +2,7 @@
 
 namespace TennisPlanner.Core.Contracts.Location
 {
-    public class Geometry
+    public class GeometryDto
     {
         [JsonPropertyName("coordinates")]
         public double[] Coordinates { get; set; }

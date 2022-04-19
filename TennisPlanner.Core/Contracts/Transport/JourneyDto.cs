@@ -2,9 +2,9 @@
 
 namespace TennisPlanner.Core.Contracts.Transport
 {
-    public class Journey
+    public class JourneyDto
     {
         [JsonPropertyName("durations")]
-        public JourneyDuration JourneyDuration { get; set; }
+        public JourneyDurationDto JourneyDuration { get; set; }
     }
 }

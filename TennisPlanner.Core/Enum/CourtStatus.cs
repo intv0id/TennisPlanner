@@ -1,8 +1,17 @@
-﻿namespace TennisPlanner.Core.Enum
+﻿namespace TennisPlanner.Core.Enum;
+
+/// <summary>
+/// The court reservation status.
+/// </summary>
+public enum CourtStatus
 {
-    public enum CourtStatus
-    {
-        Busy,
-        Available,
-    }
+    /// <summary>
+    /// The court is taken.
+    /// </summary>
+    Busy,
+
+    /// <summary>
+    /// The court is free.
+    /// </summary>
+    Available,
 }

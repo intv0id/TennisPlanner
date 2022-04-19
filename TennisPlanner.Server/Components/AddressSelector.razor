@@ -1,19 +1,15 @@
-﻿@inject IGeoClient GeoClient
-@using TennisPlanner.Core.Clients
+﻿@using TennisPlanner.Core.Clients
 @using TennisPlanner.Core.Contracts.Location
+@using TennisPlanner.Server.Models
 
-<label for="address-selector-@PlayerId">Addresse joueur @PlayerId</label>
 <BlazoredTypeahead 
-    SearchMethod="GeoClient.GetAddressAutocompleteAsync"
-    @bind-Value="selectedAddress"
-    id=@($"address-selector-{PlayerId}")>
+    SearchMethod="GetAddressSuggestionAsync"
+    @bind-Value="selectedAddress">
     <SelectedTemplate Context="templateContext">
         @if(templateContext != null)
         {
             <span>
-                @templateContext.Properties.Name,
-                @templateContext.Properties.PostCode, 
-                @templateContext.Properties.City
+                @templateContext.DisplayName
             </span>
         }
     </SelectedTemplate>
@@ -21,28 +17,10 @@
         @if(templateContext != null)
         {
             <span>
-                @templateContext.Properties.Name, 
-                @templateContext.Properties.PostCode, 
-                @templateContext.Properties.City
+                @templateContext.DisplayName
             </span>
         }
     </ResultTemplate>
 </BlazoredTypeahead>
 
-@code {
-    private Address? selectedAddress 
-    { 
-        get => SelectedAddress; 
-        set => SelectedAddressChanged.InvokeAsync(value); 
-    }
 
-    [Parameter]
-    [EditorRequired]
-    public string PlayerId { get; set; }
-
-    [Parameter]
-    public Address? SelectedAddress { get; set; }
-
-    [Parameter]
-    public EventCallback<Address?> SelectedAddressChanged { get; set; }
-}

@@ -2,7 +2,7 @@
 
 namespace TennisPlanner.Core.Contracts.Location
 {
-    public class GeoProperties
+    public class GeoPropertiesDto
     {
         [JsonPropertyName("label")]
         public string Label { get; set; }

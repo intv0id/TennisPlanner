@@ -4,13 +4,13 @@ namespace TennisPlanner.Core.Contracts
 {
     public class TimeRange
     {
-        public TimeRange(int startHour, int endHour)
+        public TimeRange(DateTime startHour, DateTime endHour)
         {
             StartHour = startHour;
             EndHour = endHour;
         }
 
-        public int StartHour { get; }
-        public int EndHour { get; }
+        public DateTime StartHour { get; }
+        public DateTime EndHour { get; }
     }
 }

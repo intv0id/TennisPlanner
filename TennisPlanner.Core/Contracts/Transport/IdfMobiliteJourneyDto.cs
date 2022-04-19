@@ -2,9 +2,9 @@
 
 namespace TennisPlanner.Core.Contracts.Transport
 {
-    public class IdfMobiliteJourneyResponse
+    public class IdfMobiliteJourneyDto
     {
         [JsonPropertyName("journeys")]
-        public Journey[] Journeys { get; set; } 
+        public JourneyDto[] Journeys { get; set; } 
     }
 }

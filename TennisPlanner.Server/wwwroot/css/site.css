@@ -67,3 +67,7 @@ a, .btn-link {
     content: "*";
     color: red;
 }
+
+html, body, div.page, main {
+    height: 100%;
+}
