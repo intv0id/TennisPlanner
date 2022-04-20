@@ -41,21 +41,7 @@
                     <td>
                         @if (row.journeyDurationsTasks.TryGetValue(gc, out var journeyDurationTask))
                         {
-                            @if (journeyDurationTask.IsCompleted)
-                            {
-                                <span>
-                                @(journeyDurationTask.Result?.TotalDurationInSeconds / 60)'
-                                (@(journeyDurationTask.Result?.WalkingDurationInSeconds / 60)')
-                                </span>
-                            }
-                            else if (journeyDurationTask.Status == TaskStatus.Running)
-                            {
-                                <span>Loading</span>
-                            }
-                            else
-                            {
-                                <span>N/A</span>
-                            }
+                           <JourneyDurationComponent JourneyDurationTask=@journeyDurationTask />
                         }
                         else
                         {
