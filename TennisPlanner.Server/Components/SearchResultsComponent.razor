@@ -19,11 +19,13 @@
             <th>Sol</th>
             <th>Couvert</th>
             <th>Eclairé</th>
-            @for (var i = 1 ; i <= Results.FromGeoCoordinates.Count ; i++)
+            @if (Results.FromGeoCoordinates != null)
             {
-                <th>Distance <br/>(dont marche)</th>
+                @foreach (var geo in Results.FromGeoCoordinates)
+                {
+                    <th>Distance <br/>(dont marche)</th>
+                }
             }
-
         </tr>
     </thead>
     <tbody>
