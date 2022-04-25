@@ -7,12 +7,11 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TennisPlanner.Core.Contracts;
-using TennisPlanner.Core.Contracts.Location;
 using TennisPlanner.Core.Contracts.Tennis;
 using TennisPlanner.Core.Enum;
 using TennisPlanner.Core.Resources;
 using TennisPlanner.Shared.Exceptions;
-using TennisPlanner.Shared.Services.Logging;
+using TennisPlanner.Shared.Models;
 
 namespace TennisPlanner.Core.Clients;
 
@@ -25,15 +24,15 @@ public class TennisParisClient : ITennisClient
     private const string timeRangeFormat = "^(?<startHour>[0-9]{1,2})h - (?<endHour>[0-9]{1,2})h$";
 
     private static readonly Regex timeRangeRegex = new Regex(@timeRangeFormat, RegexOptions.Compiled);
-    private readonly ILoggerService _loggerService;
+    private readonly ILogger _logger;
     private readonly HttpClient _httpClient;
 
     /// <summary>
     /// Instanciates <see cref="TennisParisClient"/>
     /// </summary>
-    public TennisParisClient(ILoggerService loggerService)
+    public TennisParisClient(ILogger logger)
     {
-        _loggerService = loggerService;
+        _logger = logger;
         _httpClient = new HttpClient()
         {
             BaseAddress = new Uri(baseApiUrl),
@@ -47,9 +46,8 @@ public class TennisParisClient : ITennisClient
 
         if (string.IsNullOrEmpty(content))
         {
-            _loggerService.Log(
+            _logger.Log(
                 logLevel: LogLevel.Error,
-                operationName: $"{nameof(TennisParisClient)}.{nameof(GetTennisFacilitiesListAsync)}",
                 message: $"Cannot fetch tennis facilities data from API.");
             throw new ApiException(apiName: nameof(TennisParisClient));
         }
@@ -76,9 +74,8 @@ public class TennisParisClient : ITennisClient
             var coordinates = GeoLocations.ResourceManager.GetString(facilityName)?.Split(";");
             if (coordinates == null)
             {
-                _loggerService.Log(
+                _logger.Log(
                     logLevel: LogLevel.Error,
-                    operationName: $"{nameof(TennisParisClient)}.{nameof(GetTennisFacilitiesListAsync)}",
                     message: $"Cannot find coordinates for tennis {facilityName}.");
                 continue;
             }

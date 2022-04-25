@@ -1,0 +1,57 @@
+﻿@using TennisPlanner.App.Services
+@using TennisPlanner.Core.Clients
+@using TennisPlanner.Shared.Models
+
+@inject ISearchResultDataProvider SearchResultsDataProvider
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Heure</th>
+            <th>Lieu</th>
+            <th>Court</th>
+            <th>Sol</th>
+            <th>Couvert</th>
+            <th>Eclairé</th>
+            @if (Results.FromGeoCoordinates != null)
+            {
+                @foreach (var geo in Results.FromGeoCoordinates)
+                {
+                    <th>Distance <br/>(dont marche)</th>
+                }
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var row in SearchResultsDataProvider.Filter(Results.SearchResultItems))
+        {
+            <tr>
+                <td>@(row.FromDateTime.Hour)h - @(row.ToDateTime.Hour)h</td>
+                <td>@row.TennisFacilityName</td>
+                <td>@row.CourtName</td>
+                <td>@row.CourtGround</td>
+                <td>@row.CourtRoof</td>
+                <td>@row.CourtLighting</td>
+                @foreach (var gc in Results.FromGeoCoordinates)
+                {
+                    <td>
+                        @if (row.journeyDurationsTasks.TryGetValue(gc, out var journeyDurationTask))
+                        {
+                           <JourneyDurationComponent JourneyDurationTask=@journeyDurationTask />
+                        }
+                        else
+                        {
+                            <span>Error</span>
+                        }
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    [Parameter]
+    [EditorRequired]
+    public SearchResults Results { get; set; }
+}
