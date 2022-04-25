@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 
 namespace TennisPlanner.Core.Contracts
 {
@@ -10,7 +11,9 @@ namespace TennisPlanner.Core.Contracts
             EndHour = endHour;
         }
 
+        [JsonPropertyName("start")]
         public DateTime StartHour { get; }
+        [JsonPropertyName("end")]
         public DateTime EndHour { get; }
     }
 }

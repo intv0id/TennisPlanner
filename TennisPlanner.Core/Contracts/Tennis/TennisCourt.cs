@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 
 namespace TennisPlanner.Core.Contracts.Tennis
 {
@@ -13,10 +14,15 @@ namespace TennisPlanner.Core.Contracts.Tennis
             Light = light ?? throw new ArgumentNullException(nameof(light));
         }
 
+        [JsonPropertyName("facility")]
         public TennisFacility Facility { get; }
+        [JsonPropertyName("title")]
         public string Title { get; }
+        [JsonPropertyName("roof")]
         public string Roof { get; }
+        [JsonPropertyName("ground")]
         public string Ground { get; }
+        [JsonPropertyName("light")]
         public string Light { get; }
     }
 }

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using TennisPlanner.Core.Contracts.Location;
 using TennisPlanner.Core.Contracts.Transport;
+using TennisPlanner.Shared.Models;
 
 namespace TennisPlanner.Core.Clients;
 
@@ -18,8 +19,8 @@ public interface ITransportClient
     /// <param name="arrivalTime">The estimated arrival time.</param>
     /// <param name="fromGeoCoordinates">The starting point.</param>
     /// <param name="toGeoCoordinates">The final destination.</param>
-    /// <returns>A <see cref="JourneyDurationDto"/> object when the search found a result, else null.</returns>
-    Task<JourneyDurationDto?> GetTransportationJourneyAsync(
+    /// <returns>A <see cref="Journey"/> object when the search found a result, else null.</returns>
+    Task<Journey?> GetTransportationJourneyAsync(
         DateTime arrivalTime, 
         GeoCoordinates fromGeoCoordinates, 
         GeoCoordinates toGeoCoordinates);

@@ -214,6 +214,15 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à 47 rue des Cheminots 75018.
+        /// </summary>
+        public static string TENNIS_Halle_Fret {
+            get {
+                return ResourceManager.GetString("TENNIS Halle Fret", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à 30-32 Boulevard Lannes 75016.
         /// </summary>
         public static string TENNIS_Henry_de_Montherlant {

@@ -1,0 +1,44 @@
+﻿@using TennisPlanner.Shared.Enums
+@using TennisPlanner.Shared.Models
+
+@switch (Status)
+{
+	case SearchResultsStatus.Loading:
+		<span class="oi oi-ellipses"></span>
+		break;
+	case SearchResultsStatus.Failed:
+		<span class="oi oi-circle-x"></span>
+		break;
+	case SearchResultsStatus.Ready:
+		<span>
+			@(JourneyDurationTask.Result.TotalDurationInSeconds / 60)' 
+			(@(JourneyDurationTask.Result.WalkingDurationInSeconds / 60)')
+		</span>	
+		break;
+}
+
+
+
+@code {
+	[Parameter]
+	[EditorRequired]
+	public Task<Journey> JourneyDurationTask { get; set; }
+
+	public SearchResultsStatus Status { get; set; }
+
+	protected override void OnInitialized()
+	{
+		Status = SearchResultsStatus.Loading;
+		_ = JourneyDurationTask.ContinueWith(a => DisplayDuration(a));
+	}
+
+	private void DisplayDuration(Task<Journey> task)
+	{
+		if (task.IsFaulted || task.IsCanceled || !task.IsCompleted || task.Result == null)
+		{
+			Status = SearchResultsStatus.Failed;
+		}
+
+		Status = SearchResultsStatus.Ready;
+	}
+}

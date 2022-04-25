@@ -214,6 +214,15 @@ namespace TennisPlanner.Core.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à 2,356190;48,897750.
+        /// </summary>
+        public static string TENNIS_Halle_Fret {
+            get {
+                return ResourceManager.GetString("TENNIS Halle Fret", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à 2,272121;48,867523.
         /// </summary>
         public static string TENNIS_Henry_de_Montherlant {

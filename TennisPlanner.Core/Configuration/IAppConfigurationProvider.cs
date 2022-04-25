@@ -6,8 +6,8 @@
 public interface IAppConfigurationProvider
 {
     /// <summary>
-    /// Returns the credentials for fetching token to Ile de France mobilités API.
+    /// Returns the application api base url.
     /// </summary>
-    /// <returns>The client id and secret stored in the config.</returns>
-    (string clientId, string clientSecret) GetIdfMobiliteClientCredentials();
+    /// <returns>The application api base url.</returns>
+    string GetApiBaseUrl();
 }
