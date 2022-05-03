@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Net.Http.Json;
-using System.Text.Json;
 using TennisPlanner.Core.Contracts;
+using TennisPlanner.Core.Contracts.Transport;
 using TennisPlanner.Shared.Exceptions;
 using TennisPlanner.Shared.Helpers;
-using TennisPlanner.Shared.Models;
 
 namespace TennisPlanner.App.Services;
 
@@ -26,16 +25,9 @@ public class TennisPlannerAPIService : ITennisPlannerAPIService
         return result ?? throw new ApiException("GetTennisAvailabilities");
     }
 
-    public async Task<Journey?> GetTransportationJourneyAsync(DateTime arrivalTime, GeoCoordinates fromGeoCoordinates, GeoCoordinates toGeoCoordinates)
+    public async Task<IdfMobiliteTokenDto> GetTokenAsync()
     {
-        var requestDto = new JourneyRequestDto
-        {
-            ArrivalDateTime = arrivalTime,
-            FromGeoCoordinates = fromGeoCoordinates,
-            ToGeoCoordinates = toGeoCoordinates,
-        };
-        var response = await _httpClient.PostAsJsonAsync("GetJourney", requestDto);
-        var result = await JsonSerializer.DeserializeAsync<Journey?>(response.Content.ReadAsStream());
-        return result ?? throw new ApiException("GetTennisAvailabilities");
+        var result = await _httpClient.GetFromJsonAsync<IdfMobiliteTokenDto>("GetIdfmToken");
+        return result ?? throw new ApiException("GetTokenAsync");
     }
 }
