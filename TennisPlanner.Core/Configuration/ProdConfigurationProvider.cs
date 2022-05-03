@@ -16,7 +16,7 @@ public class ProdConfigurationProvider : IAppConfigurationProvider
     public string GetApiBaseUrl() => (_environment) switch
     {
         ProductionEnvironment.Prod => "https://tennisplannerfunctionsprod.azurewebsites.net/api/",
-        ProductionEnvironment.Canary => "https://tennisplannerfunctionscanary.azurewebsites.net/api/",
+        ProductionEnvironment.Canary => "https://happy-desert-078890e03.1.azurestaticapps.net/api/",
         _ => throw new ArgumentNullException(),
     };
 }
