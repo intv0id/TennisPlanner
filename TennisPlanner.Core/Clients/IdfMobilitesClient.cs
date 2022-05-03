@@ -14,6 +14,7 @@ using System.Timers;
 using TennisPlanner.Core.Configuration;
 using TennisPlanner.Core.Contracts.Location;
 using TennisPlanner.Core.Contracts.Transport;
+using TennisPlanner.Shared.Exceptions;
 using TennisPlanner.Shared.Extensions;
 using TennisPlanner.Shared.Models;
 using TennisPlanner.Shared.Services.Logging;
@@ -29,89 +30,78 @@ public class IdfMobilitesClient : ITransportClient
     const string journeyQuery = "journeys?";
 
     private readonly HttpClient _httpClient;
-    private readonly string _clientId;
-    private readonly string _clientSecret;
 
     /// <summary>
     /// Instanciates <see cref="IdfMobilitesClient"./>
     /// </summary>
-    /// <param name="clientId">The idf mobilités client id.</param>
-    /// <param name="clientSecret">The idf mobilités client secret.</param>
-    public IdfMobilitesClient(string clientId, string clientSecret)
+    public IdfMobilitesClient()
     {
         _httpClient = new HttpClient()
         {
             BaseAddress = new Uri(baseApiUrl),
         };
+    }
 
-        _clientId = clientId;
-        _clientSecret = clientSecret;
+    public async Task<IdfMobiliteTokenDto> GetTokenAsync(string clientId, string clientSecret)
+    {
+        HttpContent content = new FormUrlEncodedContent(
+               new Dictionary<string, string>()
+               {
+                    { "grant_type", "client_credentials" },
+                    { "scope", "read-data"},
+                    { "client_id", clientId},
+                    { "client_secret", clientSecret},
+               }
+           );
+        content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
+        content.Headers.ContentType.CharSet = "UTF-8";
+
+        using var authClient = new HttpClient();
+        authClient.DefaultRequestHeaders.ExpectContinue = false;
+        HttpResponseMessage response = await authClient.PostAsync(new Uri(tokenUrl), content);
+
+        if (response.IsSuccessStatusCode)
+        {
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+            var tokenApiResult = await JsonSerializer.DeserializeAsync
+                <IdfMobiliteTokenDto>(responseStream);
+            if (tokenApiResult == null)
+            {
+                LoggerService.Instance.Log(
+                    logLevel: LogLevel.Error,
+                    operationName: $"{nameof(GeoClient)}.{nameof(this.GetTokenAsync)}",
+                    message: "Token result is null.");
+                throw new ApiException("GetIdfmToken");
+            }
+            return tokenApiResult;
+        }
+        else
+        {
+            LoggerService.Instance.Log(
+                logLevel: LogLevel.Error,
+                operationName: $"{nameof(GeoClient)}.{nameof(this.GetTokenAsync)}",
+                message: "Cannot fetch token from IDFM API.");
+            throw new ApiException("GetIdfmToken");
+        }
     }
 
     /// <inheritdoc/>
-    public async Task<Journey?> GetTransportationJourneyAsync(DateTime arrivalTime, GeoCoordinates fromGeoCoordinates, GeoCoordinates toGeoCoordinates)
+    public async Task<Journey?> GetTransportationJourneyAsync(DateTime arrivalTime, GeoCoordinates fromGeoCoordinates, GeoCoordinates toGeoCoordinates, string authToken)
     {
         var requestMessage = this.craftQuery(
             arrivalTime: arrivalTime,
             fromGeoCoordinates: fromGeoCoordinates,
             toGeoCoordinates: toGeoCoordinates);
 
-        var journeyApiResult = await AuthentifiedApiCallAsync<IdfMobiliteJourneyDto>(requestMessage);
+        var journeyApiResult = await AuthentifiedApiCallAsync<IdfMobiliteJourneyDto>(requestMessage, authToken);
 
         return journeyApiResult?.Journeys.FirstOrDefault()?.ToJourney();
     }
 
-    private async Task refreshAccessToken()
+    public async Task<T?> AuthentifiedApiCallAsync<T>(HttpRequestMessage requestMessage, string authToken)
     {
-        try
-        {
-            HttpContent content = new FormUrlEncodedContent(
-                new Dictionary<string, string>()
-                {
-                    { "grant_type", "client_credentials" },
-                    { "scope", "read-data"},
-                    { "client_id", _clientId},
-                    { "client_secret", _clientSecret},
-                }
-            );
-            content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
-            content.Headers.ContentType.CharSet = "UTF-8";
-
-            using var authClient = new HttpClient();
-            authClient.DefaultRequestHeaders.ExpectContinue = false;
-            HttpResponseMessage response = await authClient.PostAsync(new Uri(tokenUrl), content);
-
-            if (response.IsSuccessStatusCode)
-            {
-                using var responseStream = await response.Content.ReadAsStreamAsync();
-                var tokenApiResult = await JsonSerializer.DeserializeAsync
-                    <IdfMobiliteTokenDto>(responseStream);
-                _httpClient.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Bearer", tokenApiResult.AccessToken);
-            }
-            else
-            {
-                LoggerService.Instance.Log(
-                    logLevel: LogLevel.Error,
-                    operationName: $"{nameof(GeoClient)}.{nameof(this.refreshAccessToken)}",
-                    message: "Cannot fetch token from IDFM API.");
-            }
-        }
-        catch (Exception ex)
-        {
-            LoggerService.Instance.Log(
-                   logLevel: LogLevel.Error,
-                   operationName: $"{nameof(GeoClient)}.{nameof(this.refreshAccessToken)}",
-                   message: "Exception thrown while fetching token from IDFM API.",
-                   exception: ex);
-            throw;
-        }
-        
-    }
-
-    public async Task<T?> AuthentifiedApiCallAsync<T>(HttpRequestMessage requestMessage)
-    {
-        await refreshAccessToken();
+        _httpClient.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer", authToken);
         var response = await _httpClient.SendAsync(requestMessage);
 
         if (response.IsSuccessStatusCode)

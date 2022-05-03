@@ -20,6 +20,7 @@ configurationProvider = new ProdConfigurationProvider(ProductionEnvironment.Cana
 #endif
 builder.Services.AddScoped<HttpClient>(sp => new HttpClient { BaseAddress = new Uri(configurationProvider.GetApiBaseUrl()) });
 builder.Services.AddScoped<IAppConfigurationProvider>(_ => configurationProvider);
+builder.Services.AddScoped<ITransportClient, IdfMobilitesClient>();
 builder.Services.AddScoped<IGeoClient, GeoClient>();
 builder.Services.AddScoped<ILoggerService, LoggerService>(_ => LoggerService.Instance);
 builder.Services.AddScoped<NotificationService>();

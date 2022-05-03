@@ -16,17 +16,20 @@ public class SearchResultDataProvider : ISearchResultDataProvider
     public event EventHandler<ResultsChangedArgs> ResultsChanged;
 
     private readonly ITennisPlannerAPIService _apiService;
+    private readonly ITransportClient _transportClient;
     private readonly ISearchFiltersService _searchFiltersService;
     private readonly ILoggerService _loggerService;
     private readonly NotificationService _notificationService;
 
     public SearchResultDataProvider(
         ITennisPlannerAPIService apiService,
+        ITransportClient transportClient,
         ISearchFiltersService searchFiltersService,
         ILoggerService loggerService,
         NotificationService notificationService)
     {
         _apiService = apiService;
+        _transportClient = transportClient;
         _searchFiltersService = searchFiltersService;
         _loggerService = loggerService;
         _notificationService = notificationService;
@@ -88,10 +91,12 @@ public class SearchResultDataProvider : ISearchResultDataProvider
     {
         try
         {
-            var value = await _apiService.GetTransportationJourneyAsync(
+            var token = await _apiService.GetTokenAsync();
+            var value = await _transportClient.GetTransportationJourneyAsync(
                 arrivalTime: item.FromDateTime,
                 fromGeoCoordinates: gc,
-                toGeoCoordinates: item.CourtGeoCoordinates);
+                toGeoCoordinates: item.CourtGeoCoordinates,
+                token: token.AccessToken);
             return value;
         }
         catch
