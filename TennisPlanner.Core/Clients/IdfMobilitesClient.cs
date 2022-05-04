@@ -30,6 +30,9 @@ public class IdfMobilitesClient : ITransportClient
     const string journeyQuery = "journeys?";
 
     private readonly HttpClient _httpClient;
+    private readonly SemaphoreSlim _tokenSemaphore;
+
+    private IdfMobiliteTokenDto? token;
 
     /// <summary>
     /// Instanciates <see cref="IdfMobilitesClient"./>
@@ -40,6 +43,8 @@ public class IdfMobilitesClient : ITransportClient
         {
             BaseAddress = new Uri(baseApiUrl),
         };
+        token = null;
+        _tokenSemaphore = new SemaphoreSlim(1);
     }
 
     public async Task<IdfMobiliteTokenDto> GetTokenAsync(string clientId, string clientSecret)
@@ -86,14 +91,30 @@ public class IdfMobilitesClient : ITransportClient
     }
 
     /// <inheritdoc/>
-    public async Task<Journey?> GetTransportationJourneyAsync(DateTime arrivalTime, GeoCoordinates fromGeoCoordinates, GeoCoordinates toGeoCoordinates, string authToken)
+    public async Task<Journey?> GetTransportationJourneyAsync(DateTime arrivalTime, GeoCoordinates fromGeoCoordinates, GeoCoordinates toGeoCoordinates, Func<IdfMobiliteTokenDto> GetTokenMethod)
     {
+        _tokenSemaphore.Wait();
+        try
+        {
+            if (token == null)
+            {
+                token = GetTokenMethod();
+                var tokenResetTimer = new Timer(token.ExpirationDuration * 1000);
+                tokenResetTimer.Elapsed += TokenResetTimer_Elapsed;
+                tokenResetTimer.Start();
+            }
+        }
+        finally
+        {
+            _tokenSemaphore.Release();
+        }
+
         var requestMessage = this.craftQuery(
             arrivalTime: arrivalTime,
             fromGeoCoordinates: fromGeoCoordinates,
             toGeoCoordinates: toGeoCoordinates);
 
-        var journeyApiResult = await AuthentifiedApiCallAsync<IdfMobiliteJourneyDto>(requestMessage, authToken);
+        var journeyApiResult = await AuthentifiedApiCallAsync<IdfMobiliteJourneyDto>(requestMessage, token.AccessToken);
 
         return journeyApiResult?.Journeys.FirstOrDefault()?.ToJourney();
     }
@@ -149,5 +170,18 @@ public class IdfMobilitesClient : ITransportClient
         urlBuilder.Append("&count=1");
 
         return new HttpRequestMessage(method: HttpMethod.Get, requestUri: urlBuilder.ToString());
+    }
+
+    private void TokenResetTimer_Elapsed(object? sender, ElapsedEventArgs e)
+    {
+        _tokenSemaphore.Wait();
+        try
+        {
+            token = null;
+        }
+        finally
+        {
+            _tokenSemaphore.Release();
+        }
     }
 }

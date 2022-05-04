@@ -29,11 +29,11 @@ public interface ITransportClient
     /// <param name="arrivalTime">The estimated arrival time.</param>
     /// <param name="fromGeoCoordinates">The starting point.</param>
     /// <param name="toGeoCoordinates">The final destination.</param>
-    /// <param name="token">The connection token.</param>
+    /// <param name="getTokenMethod">A method to get a connection token.</param>
     /// <returns>A <see cref="Journey"/> object when the search found a result, else null.</returns>
     Task<Journey?> GetTransportationJourneyAsync(
         DateTime arrivalTime, 
         GeoCoordinates fromGeoCoordinates, 
         GeoCoordinates toGeoCoordinates,
-        string token);
+        Func<IdfMobiliteTokenDto> getTokenMethod);
 }

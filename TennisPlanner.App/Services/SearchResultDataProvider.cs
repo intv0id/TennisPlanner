@@ -96,7 +96,7 @@ public class SearchResultDataProvider : ISearchResultDataProvider
                 arrivalTime: item.FromDateTime,
                 fromGeoCoordinates: gc,
                 toGeoCoordinates: item.CourtGeoCoordinates,
-                token: token.AccessToken);
+                getTokenMethod: () => _apiService.GetTokenAsync().GetAwaiter().GetResult());
             return value;
         }
         catch
