@@ -1,18 +1,96 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
                 <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
                 <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
               <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
               <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
@@ -27,46 +105,145 @@
       </xsd:complexType>
     </xsd:element>
   </xsd:schema>
-<resheader name="resmimetype"><value>text/microsoft-resx</value></resheader><resheader name="version"><value>1.3</value></resheader><resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader><resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader><data name="TENNIS Rigoulot - La Plaine"><value>2,300417;48,826634</value></data>
-  <data name="TENNIS Paul Barruel"><value>2,305045;48,838732</value></data>
-  <data name="TENNIS Reims - Asnières"><value>2,296156;48,888725</value></data>
-  <data name="TENNIS Porte de Bagnolet"><value>2,411131;48,862341</value></data>
-  <data name="TENNIS Jesse Owens"><value>2,334439;48,89469</value></data>
-  <data name="TENNIS Elisabeth"><value>2,328651;48,821157</value></data>
-  <data name="TENNIS Louis Lumière"><value>2,411646;48,859198</value></data>
-  <data name="TENNIS Suzanne Lenglen"><value>2,276576;48,833071</value></data>
-  <data name="TENNIS Léo Lagrange"><value>2,399334;48,832165</value></data>
-  <data name="TENNIS Candie"><value>2,380032;48,851382</value></data>
-  <data name="TENNIS Carnot"><value>2,412784;48,84314</value></data>
-  <data name="TENNIS Jandelle"><value>2,379872;48,875154</value></data>
-  <data name="TENNIS Dunois"><value>2,366279;48,83317</value></data>
-  <data name="TENNIS Croix Nivert"><value>2,294626;48,842454</value></data>
-  <data name="TENNIS Niox"><value>2,264491;48,837317</value></data>
-  <data name="TENNIS Cordelières"><value>2,348605;48,833351</value></data>
-  <data name="TENNIS Bobigny"><value>2,418141;48,909202</value></data>
-  <data name="TENNIS Georges Carpentier"><value>2,366051;48,818907</value></data>
-  <data name="TENNIS Thiéré"><value>2,373838;48,853895</value></data>
-  <data name="TENNIS Sablonnière"><value>2,30205;48,843953</value></data>
-  <data name="TENNIS Atlantique"><value>2,319296;48,840803</value></data>
-  <data name="TENNIS Poissonniers"><value>2,351992;48,899686</value></data>
-  <data name="TENNIS Alain Mimoun"><value>2,410429;48,838003</value></data>
-  <data name="TENNIS La Faluère"><value>2,451513;48,829859</value></data>
-  <data name="TENNIS Docteurs Déjerine"><value>2,412285;48,855507</value></data>
-  <data name="TENNIS Philippe Auguste"><value>2,390992;48,856693</value></data>
-  <data name="TENNIS Moureu - Baudricourt"><value>2,364135;48,827801</value></data>
-  <data name="TENNIS Henry de Montherlant"><value>2,272121;48,867523</value></data>
-  <data name="TENNIS Poliveau"><value>2,357496;48,839815</value></data>
-  <data name="TENNIS Max Rousié"><value>2,325251;48,899125</value></data>
-  <data name="TENNIS Bertrand Dauvin"><value>2,342054;48,899487</value></data>
-  <data name="TENNIS Amandiers"><value>2,386217;48,865839</value></data>
-  <data name="TENNIS NEUVE SAINT PIERRE"><value>2,363531;48,853664</value></data>
-  <data name="TENNIS Edouard Pailleron"><value>2,377022;48,880595</value></data>
-  <data name="TENNIS Sept arpents"><value>2,398788;48,889602</value></data>
-  <data name="TENNIS Poterne des Peupliers"><value>2,353835;48,820265</value></data>
-  <data name="TENNIS René et André Mourlon"><value>2,284871;48,848888</value></data>
-  <data name="TENNIS Courcelles"><value>2,292427;48,889471</value></data>
-  <data name="TENNIS Château des Rentiers"><value>2,361998;48,830494</value></data>
-  <data name="TENNIS Aurelle de Paladines"><value>2,28114;48,883177</value></data>
-  <data name="TENNIS Valeyre"><value>2,345022;48,877967</value></data>
-  <data name="TENNIS Jules Ladoumègue"><value>2,397736;48,893203</value></data>
-  </root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="TENNIS Rigoulot - La Plaine" xml:space="preserve">
+    <value>2,300417;48,826634</value>
+  </data>
+  <data name="TENNIS Paul Barruel" xml:space="preserve">
+    <value>2,305045;48,838732</value>
+  </data>
+  <data name="TENNIS Reims - Asnières" xml:space="preserve">
+    <value>2,296156;48,888725</value>
+  </data>
+  <data name="TENNIS Porte de Bagnolet" xml:space="preserve">
+    <value>2,411131;48,862341</value>
+  </data>
+  <data name="TENNIS Jesse Owens" xml:space="preserve">
+    <value>2,334439;48,89469</value>
+  </data>
+  <data name="TENNIS Elisabeth" xml:space="preserve">
+    <value>2,328651;48,821157</value>
+  </data>
+  <data name="TENNIS Louis Lumière" xml:space="preserve">
+    <value>2,411646;48,859198</value>
+  </data>
+  <data name="TENNIS Suzanne Lenglen" xml:space="preserve">
+    <value>2,276576;48,833071</value>
+  </data>
+  <data name="TENNIS Léo Lagrange" xml:space="preserve">
+    <value>2,399334;48,832165</value>
+  </data>
+  <data name="TENNIS Candie" xml:space="preserve">
+    <value>2,380032;48,851382</value>
+  </data>
+  <data name="TENNIS Carnot" xml:space="preserve">
+    <value>2,412784;48,84314</value>
+  </data>
+  <data name="TENNIS Jandelle" xml:space="preserve">
+    <value>2,379872;48,875154</value>
+  </data>
+  <data name="TENNIS Dunois" xml:space="preserve">
+    <value>2,366279;48,83317</value>
+  </data>
+  <data name="TENNIS Croix Nivert" xml:space="preserve">
+    <value>2,294626;48,842454</value>
+  </data>
+  <data name="TENNIS Niox" xml:space="preserve">
+    <value>2,264491;48,837317</value>
+  </data>
+  <data name="TENNIS Cordelières" xml:space="preserve">
+    <value>2,348605;48,833351</value>
+  </data>
+  <data name="TENNIS Bobigny" xml:space="preserve">
+    <value>2,418141;48,909202</value>
+  </data>
+  <data name="TENNIS Georges Carpentier" xml:space="preserve">
+    <value>2,366051;48,818907</value>
+  </data>
+  <data name="TENNIS Thiéré" xml:space="preserve">
+    <value>2,373838;48,853895</value>
+  </data>
+  <data name="TENNIS Sablonnière" xml:space="preserve">
+    <value>2,30205;48,843953</value>
+  </data>
+  <data name="TENNIS Atlantique" xml:space="preserve">
+    <value>2,319296;48,840803</value>
+  </data>
+  <data name="TENNIS Poissonniers" xml:space="preserve">
+    <value>2,351992;48,899686</value>
+  </data>
+  <data name="TENNIS Alain Mimoun" xml:space="preserve">
+    <value>2,410429;48,838003</value>
+  </data>
+  <data name="TENNIS La Faluère" xml:space="preserve">
+    <value>2,451513;48,829859</value>
+  </data>
+  <data name="TENNIS Docteurs Déjerine" xml:space="preserve">
+    <value>2,412285;48,855507</value>
+  </data>
+  <data name="TENNIS Philippe Auguste" xml:space="preserve">
+    <value>2,390992;48,856693</value>
+  </data>
+  <data name="TENNIS Moureu - Baudricourt" xml:space="preserve">
+    <value>2,364135;48,827801</value>
+  </data>
+  <data name="TENNIS Henry de Montherlant" xml:space="preserve">
+    <value>2,272121;48,867523</value>
+  </data>
+  <data name="TENNIS Poliveau" xml:space="preserve">
+    <value>2,357496;48,839815</value>
+  </data>
+  <data name="TENNIS Max Rousié" xml:space="preserve">
+    <value>2,325251;48,899125</value>
+  </data>
+  <data name="TENNIS Bertrand Dauvin" xml:space="preserve">
+    <value>2,342054;48,899487</value>
+  </data>
+  <data name="TENNIS Amandiers" xml:space="preserve">
+    <value>2,386217;48,865839</value>
+  </data>
+  <data name="TENNIS NEUVE SAINT PIERRE" xml:space="preserve">
+    <value>2,363531;48,853664</value>
+  </data>
+  <data name="TENNIS Edouard Pailleron" xml:space="preserve">
+    <value>2,377022;48,880595</value>
+  </data>
+  <data name="TENNIS Sept arpents" xml:space="preserve">
+    <value>2,398788;48,889602</value>
+  </data>
+  <data name="TENNIS Poterne des Peupliers" xml:space="preserve">
+    <value>2,353835;48,820265</value>
+  </data>
+  <data name="TENNIS René et André Mourlon" xml:space="preserve">
+    <value>2,284871;48,848888</value>
+  </data>
+  <data name="TENNIS Courcelles" xml:space="preserve">
+    <value>2,292427;48,889471</value>
+  </data>
+  <data name="TENNIS Château des Rentiers" xml:space="preserve">
+    <value>2,361998;48,830494</value>
+  </data>
+  <data name="TENNIS Aurelle de Paladines" xml:space="preserve">
+    <value>2,28114;48,883177</value>
+  </data>
+  <data name="TENNIS Valeyre" xml:space="preserve">
+    <value>2,345022;48,877967</value>
+  </data>
+  <data name="TENNIS Jules Ladoumègue" xml:space="preserve">
+    <value>2,397736;48,893203</value>
+  </data>
+  <data name="TENNIS Halle Fret" xml:space="preserve">
+    <value>2,356190;48,897750</value>
+  </data>
+</root>
