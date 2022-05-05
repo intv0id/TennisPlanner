@@ -17,6 +17,15 @@ public interface ISearchFiltersService
     public void AddPlayerAddress(AddressModel playerAddress);
     public void RemovePlayerAddress(AddressModel playerAddress);
 
-    public string ToJson();
-    public bool TryLoadFromJson(string encodedFilters);
+    public void ResetProfile();
+
+    public bool TryLoadProfile(FiltersProfileDto filters);
+    public FiltersProfileDto ExportProfile(bool includeId = false);
+
+    public string ToBase64();
+    public bool TryLoadFromBase64(string encodedFilters);
+
+    public Task<bool> TryLoadProfileFromLocalStorageAsync(string id);
+    public Task<bool> TrySaveProfileInLocalStorageAsync();
+    public Task<List<FiltersProfileDto>> ListSavedProfileIdsInLocalStorageAsync();
 }

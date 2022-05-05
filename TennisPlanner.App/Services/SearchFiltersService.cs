@@ -1,10 +1,16 @@
-﻿using System.Text.Json;
+﻿using Blazored.LocalStorage;
+using System.Text;
+using System.Text.Json;
+using System.Text.Unicode;
+using TennisPlanner.Shared.Extensions;
 using TennisPlanner.Shared.Models;
 
 namespace TennisPlanner.App.Services;
 
 public class SearchFiltersService : ISearchFiltersService
 {
+    public const string LocalStorageFiltersKey = "FiltersProfiles";
+
     public event EventHandler<HourRangeSelectorModel> AddHourRangeEvent;
     public event EventHandler<HourRangeSelectorModel> RemoveHourRangeEvent;
     public event EventHandler<AddressModel> AddPlayerAddressEvent;
@@ -12,6 +18,15 @@ public class SearchFiltersService : ISearchFiltersService
 
     public List<HourRangeSelectorModel> HourRangeList { get; private set; } = new();
     public List<AddressModel> AddressesList { get; private set; } = new();
+    public string ProfileName = string.Empty;
+    public string StorageId = string.Empty;
+
+    public readonly ILocalStorageService _localStorage;
+
+    public SearchFiltersService(ILocalStorageService localStorage)
+    {
+        _localStorage = localStorage;
+    }
 
     public void AddHourRange(HourRangeSelectorModel hourRangeSelectorModel)
     {
@@ -37,46 +52,21 @@ public class SearchFiltersService : ISearchFiltersService
         RemovePlayerAddressEvent.Invoke(this, playerAddress);
     }
 
-    public string ToJson()
-    {
-        return JsonSerializer.Serialize(new FiltersDto
-        {
-            HourRangeList = HourRangeList,
-            AddressesList = AddressesList
-        });
-    }
-
-    public bool TryLoadFromJson(string encodedFilters)
+    public bool TryLoadProfile(FiltersProfileDto filters)
     {
         try
         {
-            var filters = JsonSerializer.Deserialize<FiltersDto>(encodedFilters);
-
-            if (filters == null)
-            {
-                return false;
-            }
-
-            foreach (var existingHourRange in HourRangeList)
-            {
-                RemoveHourRange(existingHourRange);
-            }
+            ResetProfile();
 
             foreach (var newHourRange in filters.HourRangeList)
             {
                 AddHourRange(newHourRange);
             }
 
-            foreach (var existingAddress in filters.AddressesList)
-            {
-                RemovePlayerAddress(existingAddress);
-            }
-
             foreach (var newAddress in filters.AddressesList)
             {
                 AddPlayerAddress(newAddress);
             }
-
         }
         catch
         {
@@ -84,5 +74,80 @@ public class SearchFiltersService : ISearchFiltersService
         }
 
         return true;
+    }
+
+    public void ResetProfile()
+    {
+        foreach (var existingHourRange in HourRangeList)
+        {
+            RemoveHourRange(existingHourRange);
+        }
+        foreach (var existingAddress in AddressesList)
+        {
+            RemovePlayerAddress(existingAddress);
+        }
+    }
+
+    public string ToBase64()
+    {
+        return this.ExportProfile().ToJson().ToBase64();
+    }
+
+    public bool TryLoadFromBase64(string encodedFilters)
+    {
+        try
+        {
+            var filters = encodedFilters.FromBase64().FromJson();
+            return TryLoadProfile(filters);
+        }
+        catch 
+        {
+            return false;
+        }
+    }
+
+    public FiltersProfileDto ExportProfile(bool includeId = false)
+    {
+        return new FiltersProfileDto(
+            hourRangeList: HourRangeList,
+            addressesList: AddressesList,
+            profileName: ProfileName);
+    }
+
+    public async Task<bool> TryLoadProfileFromLocalStorageAsync(string id)
+    {
+        try
+        {
+            var filtersProfiles = await _localStorage.GetItemAsync<List<FiltersProfileDto>>(LocalStorageFiltersKey);
+            var filterProfile = filtersProfiles.Single(x => x.Id == id);
+            return TryLoadProfile(filterProfile);
+        }
+        catch (Exception ex)
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> TrySaveProfileInLocalStorageAsync()
+    {
+        if (string.IsNullOrEmpty(StorageId))
+        {
+            StorageId = Guid.NewGuid().ToString();
+        }
+
+        try
+        {
+            await _localStorage.SetItemAsync("name", this.ExportProfile(includeId: true));
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public async Task<List<FiltersProfileDto>> ListSavedProfileIdsInLocalStorageAsync()
+    {
+        return await _localStorage.GetItemAsync<List<FiltersProfileDto>>(LocalStorageFiltersKey);
     }
 }
