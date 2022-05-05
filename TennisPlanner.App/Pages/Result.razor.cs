@@ -25,7 +25,7 @@ public partial class Result
             await SearchResultsDataProvider.Init(dateTime: dateTime);
             if (NavManager.TryGetQueryString<string>(Constants.FiltersQueryKey, out var filters))
             {
-                if (!SearchFiltersService.TryLoadFromJson(filters))
+                if (!SearchFiltersService.TryLoadFromBase64(filters))
                 {
                     NotificationService.Notify(severity: NotificationSeverity.Warning, summary: "Certains filtres de recherche n'ont pas été appliqués.");
                 }

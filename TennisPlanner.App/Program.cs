@@ -1,3 +1,4 @@
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Radzen;
@@ -10,6 +11,7 @@ using TennisPlanner.Shared.Services.Logging;
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
+builder.Services.AddBlazoredLocalStorage();
 
 IAppConfigurationProvider configurationProvider;
 #if DEBUG
@@ -28,6 +30,7 @@ builder.Services.AddScoped<DialogService>();
 builder.Services.AddScoped<ISearchResultDataProvider, SearchResultDataProvider>();
 builder.Services.AddScoped<ISearchFiltersService, SearchFiltersService>();
 builder.Services.AddScoped<ITennisPlannerAPIService, TennisPlannerAPIService>();
+builder.Services.AddScoped<IUserConsentService, UserConsentService>();
 
 builder.Logging.SetMinimumLevel(LogLevel.Debug);
 

@@ -1,11 +1,5 @@
 ﻿@page "/"
 
-@using TennisPlanner.Shared.Services.Logging
-
-@inject NavigationManager NavManager
-@inject NotificationService NotificationService
-@inject ILoggerService LoggerService
-
 <RadzenDialog/>
 <RadzenNotification />
 
@@ -34,6 +28,14 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
                         <a class="dropdown-item" @onclick="DisplayFiltersModal">Editer les filtres</a>
+                        @if (FiltersProfiles != null && FiltersProfiles.Count() != 0)
+                        {
+                            <div class="dropdown-divider"></div>
+                            @foreach(var filter in FiltersProfiles)
+                            {
+                                <a class="dropdown-item" @onclick="async () => await SearchWithProfileIdAsync(filter.Id)">Chercher avec @filter.ProfileName</a>
+                            }
+                        }
                     </div>
                 </div>
             </div>
