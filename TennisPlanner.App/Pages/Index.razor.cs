@@ -25,7 +25,7 @@ public partial class Index
     IUserConsentService UserConsent { get; set; }
 
     SearchModel searchModel = new();
-    public List<FiltersProfileDto>? FiltersProfiles { get; set; };
+    public List<FiltersProfileDto>? FiltersProfiles { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
