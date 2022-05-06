@@ -5,8 +5,31 @@
 @using TennisPlanner.Shared.Models
 
 @inject ISearchFiltersService SearchFiltersService
+@inject IUserConsentService UserConsentService
+@inject NotificationService NotificationService
 
 <div class="row">
+    @if (UserConsentService.IsLocalStorageEnabled())
+    {
+            @if (IsProfileInEditMode)
+            {
+                <input @bind-value=SearchFiltersService.ProfileName placeholder="Nom du profil de recherche"/>
+            }
+            else
+            {
+                <p>@SearchFiltersService.ProfileName <span class="oi-pencil" @onclick=EditProfileName/></p>
+        }
+
+        if (savedProfiles != null && savedProfiles.Count() > 0)
+        {
+             <div class="dropdown-menu dropdown-menu-right">
+                @foreach(var filter in savedProfiles)
+                {
+                    <a class="dropdown-item" @onclick="async () => await SearchFiltersService.TryLoadProfileFromLocalStorageAsync(filter.Id)">@filter.ProfileName</a>
+                }
+            </div>
+        }
+    }
     <div class="col-md-6">
         <RadzenFieldset Text="Heure">
 			@foreach (var RangeHoursSelectorModel in SearchFiltersService.HourRangeList)
@@ -35,7 +58,8 @@
                 <a class="btn btn-link" @onclick="AddHourRangeSelector"><span class="oi oi-plus"></span></a>
             </div>
         </RadzenFieldset>
-
+    </div>
+    <div class="col-md-6">
         <RadzenFieldset Text="Addresse">
 			@foreach (var addressModel in SearchFiltersService.AddressesList)
 			{
@@ -59,6 +83,19 @@
             }
         </RadzenFieldset>
     </div>
+
+    @if(@UserConsentService.IsLocalStorageEnabled())
+    {
+        @if(ProfileCanBeSaved())
+        {
+            <button @onclick=SaveProfile>Sauvegarder</button>
+        }
+        else
+        {
+            <p>Complétez tous les champs pour pouvoir enregistrer ce profil.</p>
+        }
+        <p>Vos filtres seront appliqués à la recherche. La sauvegarde permet de réutiliser vos filtres ultérieurement.</p>
+    }
 </div>
 
 
@@ -67,12 +104,25 @@
     [EditorRequired]
     public SearchModel searchModel {get; set;}
 
-    protected override void OnInitialized()
+    bool IsProfileInEditMode { get; set; }
+
+    List<FiltersProfileDto> savedProfiles;
+
+    protected override async Task OnInitializedAsync()
     {
         SearchFiltersService.AddHourRangeEvent += OnAddHourRangeEvent;
         SearchFiltersService.RemoveHourRangeEvent += OnRemoveHourRangeEvent;
         SearchFiltersService.AddPlayerAddressEvent += OnAddPlayerAddressEvent;
         SearchFiltersService.RemovePlayerAddressEvent += OnRemovePlayerAddressEvent;
+
+        if (UserConsentService.IsLocalStorageEnabled())
+        {
+            if (string.IsNullOrEmpty(SearchFiltersService.ProfileName))
+            {
+                IsProfileInEditMode = true;
+            }
+            savedProfiles = await SearchFiltersService.ListSavedProfileIdsInLocalStorageAsync();
+        }
     }
 
     private void AddHourRangeSelector()
@@ -126,5 +176,35 @@
         {
             StateHasChanged();
         });
+    }
+
+    private void EditProfileName()
+    {
+        IsProfileInEditMode = true;
+    }
+
+    private bool ProfileCanBeSaved()
+    {
+        return !string.IsNullOrEmpty(SearchFiltersService.ProfileName)
+            && (SearchFiltersService.AddressesList.Count() > 0 || SearchFiltersService.HourRangeList.Count() > 0);
+    }
+
+    private async Task SaveProfile()
+    {
+        if (await SearchFiltersService.TrySaveProfileInLocalStorageAsync())
+        {
+            IsProfileInEditMode = false;
+            NotificationService.Notify(
+                severity: NotificationSeverity.Success, 
+                summary: "Sauvegarde effectuée", 
+                detail: "Votre profil de recherche a bien été sauvegardé");
+        }
+        else
+        {
+            NotificationService.Notify(
+                severity: NotificationSeverity.Error,
+                summary: "Echec de sauvegarde",
+                detail: "Votre profil de recherche n'a pas pû être sauvegardé");
+        }
     }
 }
