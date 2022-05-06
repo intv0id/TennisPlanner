@@ -18,7 +18,7 @@ public class SearchFiltersService : ISearchFiltersService
 
     public List<HourRangeSelectorModel> HourRangeList { get; private set; } = new();
     public List<AddressModel> AddressesList { get; private set; } = new();
-    public string ProfileName = string.Empty;
+    public string ProfileName { get; set; } = string.Empty;
     public string StorageId = string.Empty;
 
     public readonly ILocalStorageService _localStorage;

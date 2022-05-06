@@ -11,6 +11,7 @@ public interface ISearchFiltersService
 
     public List<HourRangeSelectorModel> HourRangeList { get; }
     public List<AddressModel> AddressesList { get; }
+    public string ProfileName { get; set; }
 
     public void AddHourRange(HourRangeSelectorModel hourRangeSelectorModel);
     public void RemoveHourRange(HourRangeSelectorModel hourRangeSelectorModel);
