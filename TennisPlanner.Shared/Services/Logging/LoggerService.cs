@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using System.Text.Json;
 
 namespace TennisPlanner.Shared.Services.Logging
 {
@@ -18,6 +19,26 @@ namespace TennisPlanner.Shared.Services.Logging
 
         public void Log(LogLevel logLevel, string operationName, string message, Exception? exception = null)
         {
+#if DEBUG
+            var logLine = JsonSerializer.Serialize(new
+            {
+                operationName = operationName,
+                message = message,
+                exception = exception,
+            });
+
+            switch (logLevel)
+            {
+                case LogLevel.Error:
+                case LogLevel.Warning:
+                    Console.Error.WriteLine(logLine);
+                    break;
+                default:
+                    Console.WriteLine(logLine);
+                    break;
+            };
+
+#endif
             _logger.Log(
                 logLevel: logLevel, 
                 message: $"{message} in {operationName}.", 
