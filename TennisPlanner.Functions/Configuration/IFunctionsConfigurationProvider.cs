@@ -6,8 +6,8 @@
 public interface IFunctionsConfigurationProvider
 {
     /// <summary>
-    /// Returns the credentials for fetching token to Ile de France mobilités API.
+    /// Returns the api token for the PRIM API.
     /// </summary>
-    /// <returns>The client id and secret stored in the config.</returns>
-    (string clientId, string clientSecret) GetIdfMobiliteClientCredentials();
+    /// <returns>The api token stored in the config.</returns>
+    string GetPrimToken();
 }

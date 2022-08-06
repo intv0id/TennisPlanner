@@ -4,18 +4,27 @@ using TennisPlanner.Core.Contracts;
 using TennisPlanner.Core.Contracts.Transport;
 using TennisPlanner.Shared.Exceptions;
 using TennisPlanner.Shared.Helpers;
+using TennisPlanner.Shared.Models;
 
 namespace TennisPlanner.App.Services;
 
+/// <summary>
+/// API Proxy class.
+/// </summary>
 public class TennisPlannerAPIService : ITennisPlannerAPIService
 {
     private readonly HttpClient _httpClient;
 
+    /// <summary>
+    /// Constructor for <see cref="TennisPlannerAPIService"/>.
+    /// </summary>
+    /// <param name="httpClient"></param>
     public TennisPlannerAPIService(HttpClient httpClient)
     {
         _httpClient = httpClient;
     }
 
+    /// <inheritdoc/>
     public async Task<IEnumerable<TimeSlot>> GetTennisDataAsync(DateTime day)
     {
         var searchParams = new List<KeyValuePair<string, string>>();
@@ -25,9 +34,21 @@ public class TennisPlannerAPIService : ITennisPlannerAPIService
         return result ?? throw new ApiException("GetTennisAvailabilities");
     }
 
-    public async Task<IdfMobiliteTokenDto> GetTokenAsync()
+    /// <inheritdoc/>
+    public async Task<Journey?> GetTransportationJourneyAsync(
+        DateTime arrivalTime, 
+        GeoCoordinates fromGeoCoordinates, 
+        GeoCoordinates toGeoCoordinates)
     {
-        var result = await _httpClient.GetFromJsonAsync<IdfMobiliteTokenDto>("GetIdfmToken");
-        return result ?? throw new ApiException("GetTokenAsync");
+        var request = new TransportationJourneyRequestDto
+        {
+            ArrivalTime = arrivalTime,
+            FromGeoCoordinates = fromGeoCoordinates,
+            ToGeoCoordinates = toGeoCoordinates,
+        };
+
+        var result = await _httpClient.PostAsJsonAsync("GetJourney", request);
+        return await result.Content.ReadFromJsonAsync<Journey>() 
+            ?? throw new ApiException("GetJourney");
     }
 }

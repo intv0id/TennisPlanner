@@ -6,25 +6,18 @@ namespace TennisPlanner.Functions.Configuration;
 /// <inheritdoc/>
 public class FunctionsConfigurationProvider : IFunctionsConfigurationProvider
 {
-    private const string IdfMobiliteClientIdName = "IdfMobilitesClient_ClientId";
-    private const string IdfMobiliteClientSecretName = "IdfMobilitesClient_ClientSecret";
+    private const string primApiTokenName = "PrimClient_ApiToken";
 
     /// <inheritdoc/>
-    public (string clientId, string clientSecret) GetIdfMobiliteClientCredentials()
+    public string GetPrimToken()
     {
-        var clientId = GetConfigValue(IdfMobiliteClientIdName);
-        if (string.IsNullOrEmpty(clientId))
+        var apiToken = GetConfigValue(primApiTokenName);
+        if (string.IsNullOrEmpty(apiToken))
         {
-            throw new ConfigurationErrorsException($"Cannot find {IdfMobiliteClientIdName} in configuration.");
+            throw new ConfigurationErrorsException($"Cannot find {primApiTokenName} in configuration.");
         }
 
-        var clientSecret = GetConfigValue(IdfMobiliteClientSecretName);
-        if (string.IsNullOrEmpty(clientSecret))
-        {
-            throw new ConfigurationErrorsException($"Cannot find {IdfMobiliteClientSecretName} in configuration.");
-        }
-
-        return (clientId, clientSecret);
+        return apiToken;
     }
 
     private static string GetConfigValue(string name)
